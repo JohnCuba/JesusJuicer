@@ -1,0 +1,27 @@
+<!DOCTYPE HTML><html>
+<head>
+  <title>Aquaphobic</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>Aquaphobic</h1>
+  <h2>Connect to wifi</h2>
+  <form action="/connect" method="POST">
+    <input name="ssid" placeholder="ssid" required value="%SSID%" />
+    <input name="password" placeholder="password" value="%PASSWORD%" />
+    <button type="submit">
+      connect
+    </button>
+  </form>
+<script>
+</script>
+</body>
+</html>
