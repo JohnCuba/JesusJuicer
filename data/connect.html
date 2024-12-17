@@ -1,27 +1,23 @@
-<!DOCTYPE HTML><html>
+<!DOCTYPE HTML>
+<html>
 <head>
-  <title>Aquaphobic</title>
+  <title>Aquaphobic | Connect</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-  </style>
+  <link rel="stylesheet" href="/data/shared/global.css" />
 </head>
 <body>
-  <h1>Aquaphobic</h1>
-  <h2>Connect to wifi</h2>
-  <form action="/connect" method="POST">
-    <input name="ssid" placeholder="ssid" required value="%SSID%" />
-    <input name="password" placeholder="password" value="%PASSWORD%" />
-    <button type="submit">
-      connect
-    </button>
-  </form>
-<script>
-</script>
+  <div class="view">
+  </div>
+  <div class="control">
+    <h1 class="title">Aquaphobic</h1>
+    <h2 class="subtitle">Connect to wi-fi</h2>
+    <form action="/connect" method="POST" class="form">
+      <input name="ssid" placeholder="SSID" required class="input" />
+      <input name="password" placeholder="PASSWORD" class="input" />
+      <button type="submit" class="button">
+        Connect
+      </button>
+    </form>
+  </div>
 </body>
 </html>

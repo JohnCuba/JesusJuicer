@@ -1,0 +1,74 @@
+:root {
+	--palette-main: #1d3557;
+	--palette-secondary: #457b9d;
+	--palette-contrast: #f1faee;
+}
+
+* {
+	font-family: Helvetica, sans-serif;
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+}
+
+body {
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	font-family: Helvetica, sans-serif;
+	background-color: var(--palette-main);
+	color: var(--palette-contrast);
+}
+
+.title {
+	font-size: 3em;
+	font-weight: 100;
+	padding: 0 16px 0 16px;
+}
+
+.subtitle {
+	font-size: 1em;
+	font-weight: 300;
+	padding: 0 16px 0 16px;
+}
+
+.view {
+	flex: 1;
+}
+
+.control {
+	min-height: 60vh;
+}
+
+.form {
+	padding: 16px;
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.input {
+	font-size: 1em;
+	width: 100%;
+	color: var(--palette-contrast);
+	background-color: transparent;
+	border: 1px solid var(--palette-secondary);
+	padding: 14px 12px;
+}
+
+.button {
+	width: 100%;
+	font-size: 1em;
+	padding: 15px 12px;
+	text-align: start;
+	background-color: var(--palette-contrast);
+	color: var(--palette-main);
+	font-weight: 600;
+	border: none;
+}
+
+.paragraph {
+	padding: 16px;
+	font-size: 1.4em;
+	font-weight: 100;
+}

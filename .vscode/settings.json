@@ -13,7 +13,26 @@
 		"string_view": "cpp",
 		"initializer_list": "cpp",
 		"regex": "cpp",
-		"system_error": "cpp"
+		"system_error": "cpp",
+		"atomic": "cpp",
+		"bitset": "cpp",
+		"cstddef": "cpp",
+		"cstdio": "cpp",
+		"cstring": "cpp",
+		"cwchar": "cpp",
+		"functional": "cpp",
+		"memory": "cpp",
+		"memory_resource": "cpp",
+		"optional": "cpp",
+		"tuple": "cpp",
+		"type_traits": "cpp",
+		"new": "cpp",
+		"stdexcept": "cpp",
+		"thread": "cpp",
+		"ratio": "cpp",
+		"typeinfo": "cpp",
+		"utility": "cpp",
+		"cmath": "cpp"
 	},
 	"C_Cpp.errorSquiggles": "disabled"
 }
