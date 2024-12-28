@@ -88,6 +88,7 @@ bool WifiModule::connectToAP() {
 		}
 
 		if (WiFi.status() == WL_CONNECTED) {
+			logg.info("connected to " + creds.ssid + " go to " + WiFi.localIP().toString());
 			// TODO: Move connected network on 0 index
 			return true;
 		}
