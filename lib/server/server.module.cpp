@@ -48,11 +48,15 @@ void ServerModule::onSetup() {
 				creds.password = value;
 			}
 		}
+
+		request->send(LittleFS, "/connecting.html", String(), false, connectProcessor());
+
   	WifiModule* wifi_module = WifiModule::GetInstance();
 
 		wifi_module->saveNetwork(creds);
 
-		request->send(LittleFS, "/connecting.html", String(), false, connectProcessor());
+		logg.info("Network " + creds.ssid + " saved");
+
 		delay(1000);
 		ESP.restart();
 	});

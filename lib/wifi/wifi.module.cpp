@@ -60,10 +60,13 @@ void WifiModule::onSetup() {
 }
 
 bool WifiModule::connectToAP() {
-	JsonArray savedCreds = getNetworks().as<JsonArray>();
-	WiFi.mode(WIFI_MODE_STA);
-
+	JsonDocument credsDoc = getNetworks();
+	JsonArray savedCreds = credsDoc.as<JsonArray>();
 	logg.info("found " + String(savedCreds.size()) + " saved networks");
+
+	if (savedCreds.size() < 1) return false;
+
+	WiFi.mode(WIFI_MODE_STA);
 
 	for (int i = 0; i < savedCreds.size(); ++i) {
 		wifiCredentials creds = savedCreds[i].as<wifiCredentials>();
