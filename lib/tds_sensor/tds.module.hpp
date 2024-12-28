@@ -16,7 +16,7 @@ class TDSModule {
 	int copyIndex = 0;
 
 	float averageVoltage = 0;
-	float tdsValue = 0;
+	float rawTdsValue = 0;
 	float temperature = 25; 
 
 	protected:
@@ -27,4 +27,5 @@ class TDSModule {
 	static TDSModule *GetInstance();
 	void onSetup();
 	void onLoop();
+	float getValue();
 };

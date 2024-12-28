@@ -4,6 +4,7 @@
 #include "wifi.module.hpp"
 #include "server.module.hpp"
 #include "file_system.module.hpp"
+#include "tds.module.hpp"
 
 ServerModule* ServerModule::pinstance_{nullptr};
 
@@ -28,7 +29,7 @@ AwsTemplateProcessor connectProcessor() {
 void ServerModule::onSetup() {
 	server.serveStatic("/data/", LittleFS, "/");
 
-	server.on("/connect", HTTP_GET, [=](AsyncWebServerRequest *request) {
+	server.on("/connect", HTTP_GET, [=](AsyncWebServerRequest *request){
 		request->send(LittleFS, "/connect.html", String(), false, connectProcessor());
 	});
 
@@ -59,6 +60,12 @@ void ServerModule::onSetup() {
 
 		delay(1000);
 		ESP.restart();
+	});
+
+	server.on("/api/tds", HTTP_GET, [=](AsyncWebServerRequest *request) {
+		TDSModule* tdsModule = TDSModule::GetInstance();
+
+		request->send(200, "text/plain", String(tdsModule->getValue()));
 	});
 
 	server.begin();

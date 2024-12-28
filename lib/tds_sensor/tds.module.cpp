@@ -33,6 +33,12 @@ TDSModule *TDSModule::GetInstance() {
 	return pinstance_;
 }
 
+float TDSModule::getValue() {
+  if (rawTdsValue < 0 || rawTdsValue > 2000) return 0;
+
+  return rawTdsValue;
+}
+
 void TDSModule::onSetup() {
 	logg.info("start setup");
 
@@ -68,10 +74,7 @@ void TDSModule::onLoop() {
       float compensationVoltage=averageVoltage/compensationCoefficient;
       
       //convert voltage value to tds value
-      tdsValue=(133.42*compensationVoltage*compensationVoltage*compensationVoltage - 255.86*compensationVoltage*compensationVoltage + 857.39*compensationVoltage)*0.5;
-
-      logg.info("value: " + String(tdsValue));
+      rawTdsValue=(133.42*compensationVoltage*compensationVoltage*compensationVoltage - 255.86*compensationVoltage*compensationVoltage + 857.39*compensationVoltage)*0.5;
     }
   }
-
 }
