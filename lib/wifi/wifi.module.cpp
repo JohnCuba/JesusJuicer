@@ -6,16 +6,6 @@
 const long interval = 5000;
 const String credsFilePath = "/private/credentials.json";
 
-void convertFromJson(JsonVariantConst src, wifiCredentials& dst) {
-	dst.ssid = src["ssid"].as<String>();
-	dst.password = src["password"].as<String>();
-}
-
-void convertToJson(wifiCredentials src, JsonVariant variant) {
-	variant["ssid"] = src.ssid;
-	variant["password"] = src.password;
-}
-
 WifiModule* WifiModule::pinstance_{nullptr};
 
 WifiModule *WifiModule::GetInstance() {
