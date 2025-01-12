@@ -23,13 +23,13 @@ body {
 .title {
 	font-size: 3em;
 	font-weight: 100;
-	padding: 0 16px 0 16px;
+	padding-inline: 2rem;
 }
 
 .subtitle {
-	font-size: 1em;
+	font-size: 1rem;
 	font-weight: 300;
-	padding: 0 16px 0 16px;
+	padding: 0 1em 0 1em;
 }
 
 .view {
@@ -41,10 +41,10 @@ body {
 }
 
 .form {
-	padding: 16px;
+	padding: 1em;
 	display: flex;
 	flex-direction: column;
-	gap: 16px;
+	gap: 1em;
 }
 
 .input {
@@ -65,10 +65,43 @@ body {
 	color: var(--palette-main);
 	font-weight: 600;
 	border: none;
+	text-transform: capitalize;
 }
 
 .paragraph {
-	padding: 16px;
+	padding: 1em;
 	font-size: 1.4em;
 	font-weight: 100;
+}
+
+.list {
+	width: 100%;
+	list-style: none;
+}
+
+.list > .list__entity:nth-child(1n):not(:last-child) {
+	border-bottom: 1px solid var(--palette-secondary);
+}
+
+.list > .list__entity > a {
+	display: block;
+	width: 100%;
+	padding: 1rem 2rem;
+	background-color: var(--palette-main);
+	border: none;
+	text-align: start;
+	color: var(--palette-contrast);
+	text-transform: capitalize;
+	text-decoration: none;
+	font-size: 1.2em;
+	cursor: pointer;
+	transition: all .2s ease-in-out;
+}
+
+.list > .list__entity:hover > a {
+	background-color: var(--palette-secondary);
+}
+
+.hidden {
+	display: none;
 }

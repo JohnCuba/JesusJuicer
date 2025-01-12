@@ -5,5 +5,6 @@ Logg::Logg(String prefix) {
 };
 
 void Logg::info(String message) {
+	// TODO: prod no logs
 	Serial.println("[" + moduleName + "]: " + message);
 }

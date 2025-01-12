@@ -64,15 +64,15 @@ void TDSModule::onLoop() {
     printTimepoint = millis();
     for(copyIndex=0; copyIndex<sCount; copyIndex++){
       analogBufferTemp[copyIndex] = analogBuffer[copyIndex];
-      
+
       // read the analog value more stable by the median filtering algorithm, and convert to voltage value
       averageVoltage = getMedianNum(analogBufferTemp, sCount) * (float)vRef / 4096.0;
-      
+
       //temperature compensation formula: fFinalResult(25^C) = fFinalResult(current)/(1.0+0.02*(fTP-25.0)); 
       float compensationCoefficient = 1.0+0.02*(temperature-25.0);
       //temperature compensation
       float compensationVoltage=averageVoltage/compensationCoefficient;
-      
+
       //convert voltage value to tds value
       rawTdsValue=(133.42*compensationVoltage*compensationVoltage*compensationVoltage - 255.86*compensationVoltage*compensationVoltage + 857.39*compensationVoltage)*0.5;
     }

@@ -22,7 +22,6 @@ void WifiModule::saveNetwork(wifiCredentials creds) {
   JsonDocument doc;
   deserializeJson(doc, fileContent);
 	JsonArray savedCreds = doc.as<JsonArray>();
-	// TODO: Write network on 0 index
 	savedCreds.add(creds);
 
 	fs_module->writeFile(credsFilePath, doc);
