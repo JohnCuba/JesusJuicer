@@ -1,5 +1,5 @@
 #include "home.controller.hpp"
-#include "resolver/resolve.layout.hpp"
+#include "resolver/layout.resolver.hpp"
 
 AsyncWebServerResponse* homeController(AsyncWebServerRequest* request) {
 		// TODO: Place here suggestion action or main metrics
@@ -9,7 +9,7 @@ AsyncWebServerResponse* homeController(AsyncWebServerRequest* request) {
 		return request->beginResponse(200, "text/html", content);
 	}
 
-	String page = resolveLayout(resolveLayoutArgs{
+	String page = layoutResolver(layoutResolverArgs{
 		page: "Home",
 		content,
 	});

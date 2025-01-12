@@ -1,7 +1,7 @@
-#include "resolve.layout.hpp"
+#include "layout.resolver.hpp"
 #include "file_system.module.hpp"
 
-String resolveLayout(resolveLayoutArgs options) {
+String layoutResolver(layoutResolverArgs options) {
 	FileSystemModule* fs_module = FileSystemModule::GetInstance();
 	String layoutMarkup = fs_module->readFile("/public/components/layout.html");
 

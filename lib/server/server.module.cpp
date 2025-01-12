@@ -6,7 +6,7 @@
 #include "file_system.module.hpp"
 #include "tds.module.hpp"
 #include "wifi_credentials.hpp"
-#include "./resolver/resolve.layout.hpp"
+#include "./resolver/layout.resolver.hpp"
 #include "./controller/home.controller.hpp"
 
 ServerModule* ServerModule::pinstance_{nullptr};
@@ -93,7 +93,7 @@ AsyncWebServerResponse* wifiController(AsyncWebServerRequest* request) {
 		return request->beginResponse(200, "text/html", content);
 	}
 
-	String page = resolveLayout(resolveLayoutArgs{
+	String page = layoutResolver(layoutResolverArgs{
 		page: "Wifi",
 		content: content,
 	});
@@ -117,7 +117,7 @@ AsyncWebServerResponse* wifiEditorController(AsyncWebServerRequest* request) {
 
 	content = resolveSavedWifiList() + "<div id=\"wifi-editor\" hx-boost=\"true\">" + content + "</div>";
 
-	String page = resolveLayout(resolveLayoutArgs{
+	String page = layoutResolver(layoutResolverArgs{
 		page: "Wifi",
 		content: content,
 	});
