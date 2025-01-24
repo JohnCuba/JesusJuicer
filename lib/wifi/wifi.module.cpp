@@ -2,6 +2,10 @@
 #include "ArduinoJson.h"
 #include "wifi.module.hpp"
 #include "wifi_credentials.hpp"
+#include "server.module.hpp"
+#include "./controller/wifi.controller.hpp"
+#include "./controller/wifi_editor.controller.hpp"
+#include "./controller/wifi_edit.controller.hpp"
 
 const long interval = 5000;
 const String credsFilePath = "/private/credentials.json";
@@ -37,6 +41,26 @@ JsonDocument WifiModule::getNetworks() {
 
 void WifiModule::onSetup() {
 	logg.info("start setup");
+	logg.info("setup server routes");
+
+	ServerModule* server_module = ServerModule::GetInstance();
+
+	server_module->registerRoute("/wifi/", HTTP_GET, [](AsyncWebServerRequest *request) {
+		AsyncWebServerResponse *response = wifiController(request);
+		request->send(response);
+	});
+
+	server_module->registerRoute("/wifi/edit", HTTP_GET, [](AsyncWebServerRequest *request) {
+		AsyncWebServerResponse *response = wifiEditorController(request);
+		request->send(response);
+	});
+
+	server_module->registerRoute("/wifi/edit", HTTP_POST, [](AsyncWebServerRequest *request) {
+		AsyncWebServerResponse *response = wifiEditController(request);
+		request->send(response);
+	});
+
+	logg.info("setup connection mode");
 
 	bool connected = connectToAP();
 
@@ -53,7 +77,10 @@ bool WifiModule::connectToAP() {
 	JsonArray savedCreds = credsDoc.as<JsonArray>();
 	logg.info("found " + String(savedCreds.size()) + " saved networks");
 
-	if (savedCreds.size() < 1) return false;
+	if (savedCreds.size() < 1) {
+		logg.info("no saved networks finded");
+		return false;
+	};
 
 	WiFi.mode(WIFI_MODE_STA);
 
@@ -82,6 +109,8 @@ bool WifiModule::connectToAP() {
 			return true;
 		}
 	}
+
+	logg.info("Saved networks: " + String(savedCreds.size()) + ", but no one there");
 
 	return false;
 };

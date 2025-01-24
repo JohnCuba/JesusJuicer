@@ -16,4 +16,5 @@ class ServerModule {
 	public:
 	static ServerModule *GetInstance();
 	void onSetup();
+	void registerRoute(const char *uri, WebRequestMethodComposite method, ArRequestHandlerFunction onRequest);
 };

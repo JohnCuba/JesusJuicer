@@ -1,6 +1,6 @@
 #include "wifi.controller.hpp"
 #include "../resolver/saved_wifi_list.resolver.hpp"
-#include "../resolver/layout.resolver.hpp"
+#include "../server/resolver/layout.resolver.hpp"
 
 AsyncWebServerResponse* wifiController(AsyncWebServerRequest* request) {
 	String content = String();

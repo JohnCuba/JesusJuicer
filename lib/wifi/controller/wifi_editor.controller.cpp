@@ -1,5 +1,5 @@
 #include "wifi_editor.controller.hpp"
-#include "../resolver/layout.resolver.hpp"
+#include "../server/resolver/layout.resolver.hpp"
 #include "../resolver/wifi_editor.resolver.hpp"
 #include "../resolver/saved_wifi_list.resolver.hpp"
 
