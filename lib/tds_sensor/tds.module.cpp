@@ -1,3 +1,5 @@
+#include <ESPAsyncWebServer.h>
+#include "server.module.hpp"
 #include "tds.module.hpp"
 
 int getMedianNum(int bArray[], int iFilterLen){
@@ -41,6 +43,13 @@ float TDSModule::getValue() {
 
 void TDSModule::onSetup() {
 	logg.info("start setup");
+	logg.info("setup server routes");
+
+	ServerModule* server_module = ServerModule::GetInstance();
+
+  server_module->registerRoute("/api/tds", HTTP_GET, [=](AsyncWebServerRequest *request) {
+		request->send(200, "text/plain", String(getValue()));
+	});
 
   pinMode(sensorPin, INPUT);
 
