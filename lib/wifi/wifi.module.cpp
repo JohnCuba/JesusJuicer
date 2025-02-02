@@ -1,11 +1,10 @@
 #include <WiFi.h>
+
+#include "AsyncJson.h"
 #include "ArduinoJson.h"
 #include "wifi.module.hpp"
 #include "wifi_credentials.hpp"
 #include "server.module.hpp"
-#include "./controller/wifi.controller.hpp"
-#include "./controller/wifi_editor.controller.hpp"
-#include "./controller/wifi_edit.controller.hpp"
 
 const long interval = 5000;
 const String credsFilePath = "/private/credentials.json";
@@ -20,15 +19,57 @@ WifiModule *WifiModule::GetInstance() {
 	return pinstance_;
 }
 
-void WifiModule::saveNetwork(wifiCredentials creds) {
-	FileSystemModule* fs_module = FileSystemModule::GetInstance();
-	String fileContent = fs_module->readFile(credsFilePath);
-  JsonDocument doc;
-  deserializeJson(doc, fileContent);
+JsonArray putNetwork(JsonArray array, int index, wifiCredentials creds) {
+	array[index].set(creds);
+
+	return array;
+}
+
+JsonArray moveNetwork(JsonArray array, int index, int to) {
+	if (index == to) return array;
+
+	JsonObject obj = array[index];
+
+	array[index].set(array[to]);
+	array[to].set(obj);
+
+	return array;
+}
+
+void WifiModule::editNetwork(int index, int toIndex, wifiCredentials creds) {
+  JsonDocument doc = getNetworks();
 	JsonArray savedCreds = doc.as<JsonArray>();
+
+	if (index >= savedCreds.size()) {
+		throw std::invalid_argument("received invalid index");
+	}
+
+	putNetwork(savedCreds, index, creds);
+	if (index != toIndex) {
+		// TODO: clean up shit here
+		int resolvedTo = std::max(std::min(String(savedCreds.size()).toInt(), String(toIndex).toInt()), String(0).toInt());
+		moveNetwork(savedCreds, index, resolvedTo);
+	}
+
+	setNetworks(doc);
+}
+
+void WifiModule::saveNetwork(wifiCredentials creds) {
+  JsonDocument doc = getNetworks();
+	JsonArray savedCreds = doc.as<JsonArray>();
+
 	savedCreds.add(creds);
 
-	fs_module->writeFile(credsFilePath, doc);
+	setNetworks(doc);
+}
+
+void WifiModule::deleteNetwork(int index) {
+  JsonDocument doc = getNetworks();
+	JsonArray savedCreds = doc.as<JsonArray>();
+
+	savedCreds.remove(index);
+
+	setNetworks(doc);
 }
 
 JsonDocument WifiModule::getNetworks() {
@@ -39,26 +80,83 @@ JsonDocument WifiModule::getNetworks() {
 	return doc;
 }
 
+void WifiModule::setNetworks(JsonDocument doc) {
+	FileSystemModule* fs_module = FileSystemModule::GetInstance();
+	fs_module->writeFile(credsFilePath, doc);
+}
+
 void WifiModule::onSetup() {
 	logg.info("start setup");
 	logg.info("setup server routes");
 
 	ServerModule* server_module = ServerModule::GetInstance();
 
-	server_module->registerRoute("/wifi/", HTTP_GET, [](AsyncWebServerRequest *request) {
-		AsyncWebServerResponse *response = wifiController(request);
+	server_module->registerRoute("/api/wifi", HTTP_GET, [=](AsyncWebServerRequest *request) {
+		FileSystemModule* fs_module = FileSystemModule::GetInstance();
+		String fileContent = fs_module->readFile(credsFilePath);
+		AsyncWebServerResponse *response = request->beginResponse(200, "application/json", fileContent);
+		response->addHeader("Access-Control-Allow-Origin", "*");
+
 		request->send(response);
 	});
 
-	server_module->registerRoute("/wifi/edit", HTTP_GET, [](AsyncWebServerRequest *request) {
-		AsyncWebServerResponse *response = wifiEditorController(request);
+	server_module->registerRoute("/api/wifi", HTTP_POST, [=](AsyncWebServerRequest *request) {
+		const String ssid = request->getParam("ssid", true)->value();
+		const String password = request->getParam("password", true)->value();
+
+		saveNetwork(wifiCredentials{ ssid, password });
+
+		AsyncWebServerResponse *response = request->beginResponse(201, "text/plain", "Credentials saved");
+		response->addHeader("Access-Control-Allow-Origin", "*");
+
 		request->send(response);
 	});
 
-	server_module->registerRoute("/wifi/edit", HTTP_POST, [](AsyncWebServerRequest *request) {
-		AsyncWebServerResponse *response = wifiEditController(request);
+	server_module->registerRoute("/api/wifi", HTTP_PATCH, [=](AsyncWebServerRequest *request) {
+		if (!request->hasParam("index", true)) {
+			request->send_P(422, "text/plain", "provide index");
+		}
+
+		if (!request->hasParam("ssid", true)) {
+			request->send_P(422, "text/plain", "provide ssid");
+		}
+
+		const int index = request->getParam("index", true)->value().toInt();
+		const int to = request->hasParam("to", true) ? request->getParam("to", true)->value().toInt() : index;
+		String ssid = request->getParam("ssid", true)->value();
+		String password = request->hasParam("password", true) ? request->getParam("password", true)->value() : String();
+
+		try {
+			editNetwork(
+				index,
+				to,
+				wifiCredentials{ssid, password}
+			);
+		} catch (const std::invalid_argument& e) {
+			request->send_P(422, "text/plain", e.what());
+		}
+
+		AsyncWebServerResponse *response = request->beginResponse(200);
+		response->addHeader("Access-Control-Allow-Origin", "*");
+
 		request->send(response);
 	});
+
+	server_module->registerRoute("/api/wifi", HTTP_DELETE, [=](AsyncWebServerRequest *request) {
+		if (!request->hasParam("index", true)) {
+			request->send_P(422, "text/plain", "provide index");
+		}
+		const int index = request->getParam("index", true)->value().toInt();
+
+		deleteNetwork(index);
+
+		AsyncWebServerResponse *response = request->beginResponse(200);
+		response->addHeader("Access-Control-Allow-Origin", "*");
+
+		request->send(response);
+	});
+
+	// TODO: /api/wifi/self get, put
 
 	logg.info("setup connection mode");
 

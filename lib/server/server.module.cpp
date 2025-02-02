@@ -3,7 +3,6 @@
 #include "LittleFS.h"
 #include "server.module.hpp"
 #include "tds.module.hpp"
-#include "./controller/home.controller.hpp"
 
 ServerModule* ServerModule::pinstance_{nullptr};
 
@@ -24,10 +23,11 @@ void ServerModule::registerRoute(const char *uri, WebRequestMethodComposite meth
 };
 
 void ServerModule::onSetup() {
-	server.serveStatic("/data/public/shared/", LittleFS, "/public/shared/");
+	server.serveStatic("/", LittleFS, "/public/");
 
-	server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
-		AsyncWebServerResponse *response = homeController(request);
+	server.on("/*", HTTP_GET, [](AsyncWebServerRequest *request) {
+		AsyncWebServerResponse *response = request->beginResponse(LittleFS, "/public/index.html.gz", "text/html");
+		response->addHeader("Content-Encoding", "gzip");
 		request->send(response);
 	});
 
