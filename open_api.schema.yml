@@ -1,0 +1,152 @@
+openapi: 3.1.0
+info:
+  title: Aquaphobic
+  description: Api schema of aquaphobic device
+  version: 0.0.0
+servers:
+  - url: http://192.168.0.194
+    description: local network
+paths:
+  /api/wifi:
+    post:
+      operationId: saveWifiNetwork
+      tags:
+        - wifi
+      summary: Save wifi network
+      responses:
+        "201":
+          description: The request was successful, and a new resource was created.
+          content:
+            text/plain:
+              schema:
+                type: string
+      requestBody:
+        required: true
+        description: ""
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/wifiCredentials"
+    patch:
+      operationId: editSavedCredentials
+      tags:
+        - wifi
+      summary: Edit saved credentials
+      responses:
+        "200":
+          description: The request was successful, and the server has returned the
+            requested resource in the response body.
+          content:
+            text/plain:
+              schema:
+                type: string
+        "422":
+          description: Provided invalid data
+          content:
+            text/plain:
+              schema:
+                type: string
+      requestBody:
+        required: true
+        description: ""
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/wifiCredentials"
+    delete:
+      operationId: removesSavedCredentials
+      tags:
+        - wifi
+      summary: Removes saved credentials
+      responses:
+        "204":
+          description: The request was successful, but there is no content to return in
+            the response.
+          content:
+            application/x-www-form-urlencoded:
+              schema:
+                type: object
+                properties:
+                  index:
+                    type: number
+                required:
+                  - index
+    get:
+      operationId: getWifiNetworks
+      tags:
+        - wifi
+      summary: get wifi networks
+      responses:
+        "200":
+          description: The request was successful, and the server has returned the
+            requested resource in the response body.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/wifiCredentials"
+      parameters: []
+      description: Get saved wifi networks credentials
+components:
+  schemas:
+    wifiCredentials:
+      type: object
+      properties:
+        ssid:
+          type: string
+        password:
+          type: string
+      required:
+        - ssid
+      description: A simplified representation of a wifiCredentials, typically used in
+        list views.
+    wifiCredentialsSummary:
+      type: object
+      properties:
+        ssid:
+          type: string
+        password:
+          type: string
+      required:
+        - ssid
+      description: A simplified representation of a wifiCredentials, typically used in
+        list views.
+      x-fiddle-dto-info:
+        baseSchemaName: wifiCredentials
+  responses:
+    NotFound:
+      description: The server cannot find the requested resource. The endpoint may be
+        invalid or the resource may no longer exist.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            required:
+              - message
+    BadRequest:
+      description: The server could not understand the request due to invalid syntax.
+        The client should modify the request and try again.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              errors:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                  required:
+                    - message
+            required:
+              - message
+tags:
+  - name: wifi

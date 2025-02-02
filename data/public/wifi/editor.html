@@ -1,6 +1,0 @@
-<form action="/wifi/edit?target=%TARGET%" method="POST" hx-target="#wifi-list" hx-swap="innerHTML transition:true" hx-on::after-request=" if(event.detail.successful) this.reset()" class="form">
-	<h3>%ACTION_TITLE%</h3>
-	<input type="text" name="ssid" placeholder="SSID" required="" value="%SSID%" class="input">
-	<input type="password" name="password" placeholder="PASSWORD" value="%PASSWORD%" class="input">
-	<button type="submit" class="button">%ACTION%</button>
-</form>
