@@ -1,0 +1,175 @@
+openapi: 3.1.0
+info:
+  title: Aquaphobic
+  version: 0.0.0
+  description: Api schema of aquaphobic device
+servers:
+- url: http://192.168.0.194
+  description: local network
+paths:
+  /api/wifi:
+    get:
+      tags:
+      - wifi
+      summary: get saved credentials
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/wifiCredentials'
+          description: The request was successful, and the server has returned the requested resource in the response body.
+      parameters: []
+      description: Get saved wifi networks credentials
+      operationId: getSavedCredentials
+    post:
+      tags:
+      - wifi
+      summary: save credentials
+      responses:
+        '201':
+          content:
+            text/plain:
+              schema:
+                type: string
+          description: The request was successful, and a new resource was created.
+      parameters: []
+      operationId: saveCredentials
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/wifiCredentials'
+        required: true
+        description: ''
+    patch:
+      tags:
+      - wifi
+      summary: edit saved credentials
+      responses:
+        '200':
+          content:
+            text/plain:
+              schema:
+                type: string
+          description: The request was successful, and the server has returned the requested resource in the response body.
+        '422':
+          content:
+            text/plain:
+              schema:
+                type: string
+          description: Provided invalid data
+      parameters: []
+      operationId: editSavedCredentials
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/wifiCredentialsEdit'
+        required: true
+        description: ''
+    delete:
+      tags:
+      - wifi
+      summary: remove saved credentials
+      responses:
+        '204':
+          content:
+            application/x-www-form-urlencoded:
+              schema:
+                type: object
+                required:
+                - index
+                properties:
+                  index:
+                    type: number
+          description: The request was successful, but there is no content to return in the response.
+      parameters:
+      - in: query
+        name: index
+        style: form
+        schema:
+          type: number
+        explode: true
+        required: true
+        description: index of deleted network
+        allowReserved: false
+      operationId: removeSavedCredentials
+    options:
+      tags:
+      - wifi
+      summary: preflight request
+      responses:
+        '200':
+          content:
+            text/plain:
+              schema:
+                type: 'null'
+          description: The request was successful, and the server has returned the requested resource in the response body.
+      parameters: []
+      operationId: preflightRequest
+components:
+  schemas:
+    wifiCredentials:
+      type: object
+      required:
+      - ssid
+      properties:
+        ssid:
+          type: string
+        password:
+          type: string
+      description: A simplified representation of a wifiCredentials, typically used in list views.
+    wifiCredentialsEdit:
+      type: object
+      required:
+      - ssid
+      - index
+      properties:
+        to:
+          type: number
+        ssid:
+          type: string
+        index:
+          type: number
+        password:
+          type: string
+      description: ''
+      x-fiddle-dto-info:
+        baseSchemaName: wifiCredentials
+  responses:
+    NotFound:
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - message
+            properties:
+              message:
+                type: string
+      description: The server cannot find the requested resource. The endpoint may be invalid or the resource may no longer exist.
+    BadRequest:
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - message
+            properties:
+              errors:
+                type: array
+                items:
+                  type: object
+                  required:
+                  - message
+                  properties:
+                    message:
+                      type: string
+              message:
+                type: string
+      description: The server could not understand the request due to invalid syntax. The client should modify the request and try again.
+tags:
+- name: wifi
