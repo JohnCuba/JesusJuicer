@@ -16,10 +16,10 @@ export interface WifiCredentials {
 }
 
 export interface WifiCredentialsEdit {
-  ssid: string
-  password?: string
-  index: number
   to?: number
+  ssid: string
+  index: number
+  password?: string
 }
 
 export type QueryParamsType = Record<string | number, any>
