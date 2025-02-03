@@ -5,7 +5,6 @@
   "type": "module",
   "scripts": {
     "dev": "bunx --bun vite",
-    "preview": "bunx --bun vite preview",
     "build": "bunx --bun vite build",
     "type-check": "bunx --bun vue-tsc --build",
     "lint": "bunx --bun eslint . --fix",

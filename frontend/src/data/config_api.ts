@@ -344,5 +344,38 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         method: 'OPTIONS',
         ...params,
       }),
+
+    /**
+     * No description
+     *
+     * @tags ap, wifi
+     * @name GetApCredentials
+     * @summary get ap credentials
+     * @request GET:/api/wifi/ap
+     */
+    getApCredentials: (params: RequestParams = {}) =>
+      this.request<WifiCredentials, any>({
+        path: `/api/wifi/ap`,
+        method: 'GET',
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags ap
+     * @name SetApCredentials
+     * @summary set ap credentials
+     * @request PATCH:/api/wifi/ap
+     */
+    setApCredentials: (data: WifiCredentials, params: RequestParams = {}) =>
+      this.request<string, any>({
+        path: `/api/wifi/ap`,
+        method: 'PATCH',
+        body: data,
+        type: ContentType.UrlEncoded,
+        ...params,
+      }),
   }
 }
