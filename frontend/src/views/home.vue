@@ -1,9 +1,16 @@
 <script setup lang="ts">
 import PageHeader from '@/components/page-header.vue'
+import WifiTile from '@/widgets/wifi.tile.vue'
 </script>
 
 <template>
-  <PageHeader />
+  <PageHeader>
+    <WifiTile />
+  </PageHeader>
 </template>
 
-<style scoped></style>
+<style scoped>
+.header {
+  min-height: 100vh;
+}
+</style>

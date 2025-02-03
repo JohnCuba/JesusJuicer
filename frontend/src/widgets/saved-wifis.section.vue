@@ -15,7 +15,11 @@ const editWifi = useEditWifi()
 const saveWifi = useSaveWifi()
 
 const listAdopted = computed(() => {
-  const items = data.value?.map((item, index) => ({ slot: 'wifi', key: index.toString(), ...item }))
+  const items = (data.value || []).map((item, index) => ({
+    slot: 'wifi',
+    key: index.toString(),
+    ...item,
+  }))
   items?.push({ slot: 'new', key: 'new', ssid: '' })
   return items
 })

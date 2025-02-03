@@ -5,7 +5,7 @@ import SavedWifisSection from '@/widgets/saved-wifis.section.vue'
 </script>
 
 <template>
-  <PageHeader />
+  <PageHeader with-nav title="Wi-Fi networking" subtitle="Aquaphobic" />
   <SavedWifisSection />
   <AccessPointSection />
 </template>

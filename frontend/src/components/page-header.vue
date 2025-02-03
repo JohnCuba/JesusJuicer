@@ -1,13 +1,38 @@
 <script setup lang="ts">
-const MENU = [{ name: 'home' }, { name: 'wi-fi' }]
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+
+defineProps({
+  title: {
+    type: String,
+    default: 'Aquaphobic',
+  },
+  subtitle: {
+    type: String,
+    default: null,
+  },
+  withNav: {
+    type: Boolean,
+    default: false,
+  },
+})
+
+const MENU_ITEMS = [{ name: 'home' }, { name: 'wi-fi' }]
+const route = useRoute()
+
+const menu = computed(() => MENU_ITEMS.filter(({ name }) => name !== route.name))
 </script>
 
 <template>
   <header class="header">
-    <h1 class="header__title">Aquaphobic</h1>
-    <nav>
+    <div v-if="$slots.default" class="header__content">
+      <slot />
+    </div>
+    <h2 v-if="subtitle" class="header__subtitle">{{ subtitle }}</h2>
+    <h1 class="header__title">{{ title }}</h1>
+    <nav v-if="withNav">
       <ul class="header__navigation">
-        <li class="header__navigation-item" v-for="item in MENU" :key="item.name">
+        <li class="header__navigation-item" v-for="item in menu" :key="item.name">
           <router-link :to="item">{{ item.name }}</router-link>
         </li>
       </ul>
@@ -17,18 +42,31 @@ const MENU = [{ name: 'home' }, { name: 'wi-fi' }]
 
 <style scoped>
 .header {
-  height: 22rem;
+  min-height: 22rem;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   background-color: var(--palette-main);
 }
 
+.header__content {
+  padding: 1rem;
+  flex: 1;
+}
+
 .header__title {
   padding-inline: 1rem;
   font-size: 2.625rem;
-  font-weight: 100;
+  font-weight: 400;
   margin-bottom: 1rem;
+}
+
+.header__subtitle {
+  padding-inline: 1rem;
+  font-size: 1.625rem;
+  font-weight: 100;
+  margin-bottom: 0.4rem;
+  opacity: 0.6;
 }
 
 .header__navigation {
