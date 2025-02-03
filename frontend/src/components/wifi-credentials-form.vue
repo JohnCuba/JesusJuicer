@@ -34,7 +34,7 @@ const hadndleSave = () => {
 </script>
 
 <template>
-  <form class="wifi-credentials-form">
+  <form class="wifi-credentials-form" @click.stop="">
     <Input placeholder="SSID" type="text" v-model="ssid" />
     <Input placeholder="Password" type="password" v-model="password" />
     <div class="actions">
@@ -57,6 +57,6 @@ const hadndleSave = () => {
 .actions {
   display: flex;
   flex-direction: row;
-  gap: 0.2rem;
+  gap: 0.6rem;
 }
 </style>

@@ -1,5 +1,5 @@
 <script lang="ts" setup generic="T extends { slot: string; key: string }">
-import { ref, type PropType } from 'vue'
+import { type PropType } from 'vue'
 
 defineProps({
   items: {
@@ -9,21 +9,18 @@ defineProps({
 })
 
 const emit = defineEmits<{
-  click: [value: T]
+  click: [value: T['key']]
 }>()
 
-const focused = ref<string | null>()
-
-const handleClickItem = (value: T) => {
-  focused.value = String(value.key)
-  emit('click', value)
+const handleClick = (itemKey: T['key']) => {
+  emit('click', itemKey)
 }
 </script>
 
 <template>
   <ul class="root">
-    <li v-for="item in items" :key="item.key" class="entity" @click="handleClickItem(item)">
-      <slot :name="item.slot" v-bind="{ ...item, isFocused: focused === item.key }" />
+    <li v-for="item in items" :key="item.key" class="entity" @click="handleClick(item.key)">
+      <slot :name="item.slot" v-bind="item" />
     </li>
   </ul>
 </template>

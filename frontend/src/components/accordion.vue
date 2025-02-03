@@ -1,35 +1,40 @@
 <script lang="ts" setup>
-import { defineAsyncComponent, ref, watch } from 'vue'
+import { defineAsyncComponent } from 'vue'
 const IconChevronDown = defineAsyncComponent(() => import('@/assets/icons/chevron-down.svg'))
 
-const visibilityState = defineModel('open', {
-  type: Boolean,
+defineProps({
+  isOpen: {
+    type: Boolean,
+    default: false,
+  },
 })
 
-const localOpenState = ref(visibilityState.value)
+const emit = defineEmits<{
+  click: []
+}>()
 
 const handleClickSummary = () => {
-  localOpenState.value = !localOpenState.value
+  emit('click')
 }
-
-watch(visibilityState, (value) => {
-  localOpenState.value = value
-})
 </script>
 
 <template>
-  <div>
+  <div class="accordion">
     <div class="summary" @click="handleClickSummary">
       <slot name="summary" />
-      <IconChevronDown class="summary__mark" :class="{ 'summary__mark--open': localOpenState }" />
+      <IconChevronDown class="summary__mark" :class="{ 'summary__mark--open': isOpen }" />
     </div>
-    <div v-if="localOpenState">
+    <div v-if="isOpen">
       <slot name="details" />
     </div>
   </div>
 </template>
 
 <style scoped>
+.accordion {
+  padding: 1rem;
+}
+
 .summary {
   display: flex;
   justify-content: space-between;
