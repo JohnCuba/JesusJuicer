@@ -1,4 +1,5 @@
 #include <WiFi.h>
+#include <Preferences.h>
 
 #include "AsyncJson.h"
 #include "ArduinoJson.h"
@@ -8,6 +9,9 @@
 
 const long interval = 5000;
 const String credsFilePath = "/private/credentials.json";
+
+const String selfApSSID = "aquaphobic";
+const String selfApPassword = "yoitsmeman";
 
 WifiModule* WifiModule::pinstance_{nullptr};
 
@@ -34,6 +38,28 @@ JsonArray moveNetwork(JsonArray array, int index, int to) {
 	array[to].set(obj);
 
 	return array;
+}
+
+wifiCredentials getSelfAPCredentials() {
+	Preferences preferences;
+  preferences.begin("self-ap", false);
+
+  String ssid = preferences.getString("ssid", selfApSSID); 
+  String password = preferences.getString("password", selfApPassword);
+
+	preferences.end();
+
+	return wifiCredentials{ssid, password};
+}
+
+void setSelfAPCredentials(wifiCredentials creds) {
+	Preferences preferences;
+  preferences.begin("self-ap", false);
+
+  preferences.putString("ssid", creds.ssid); 
+  preferences.getString("password", creds.password);
+
+	preferences.end();
 }
 
 void WifiModule::editNetwork(int index, int toIndex, wifiCredentials creds) {
@@ -216,7 +242,9 @@ bool WifiModule::connectToAP() {
 
 void WifiModule::createAP() {
 	WiFi.mode(WIFI_MODE_AP);
-	WiFi.softAP("aquaphobic", "yoitsmeman");
+
+	wifiCredentials creds = getSelfAPCredentials();
+	WiFi.softAP(creds.ssid, creds.password);
 
 	logg.info("AP is created: " + WiFi.softAPSSID());
 	logg.info("IP address: " + WiFi.softAPIP().toString());
