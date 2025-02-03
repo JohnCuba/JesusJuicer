@@ -16,7 +16,11 @@ ServerModule *ServerModule::GetInstance() {
 
 ServerModule::ServerModule() :
 	server{80}
-{};
+{
+	DefaultHeaders::Instance().addHeader("Access-Control-Allow-Origin", "*");
+	DefaultHeaders::Instance().addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
+	DefaultHeaders::Instance().addHeader("Access-Control-Allow-Private-Network", "true");
+};
 
 void ServerModule::registerRoute(const char *uri, WebRequestMethodComposite method, ArRequestHandlerFunction onRequest) {
 	server.on(uri, method, onRequest);

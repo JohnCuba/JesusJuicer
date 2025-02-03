@@ -91,11 +91,14 @@ void WifiModule::onSetup() {
 
 	ServerModule* server_module = ServerModule::GetInstance();
 
+	server_module->registerRoute("/api/wifi", HTTP_OPTIONS, [=](AsyncWebServerRequest *request) {
+		request->send_P(200, "text/plain", "ok");
+	});
+
 	server_module->registerRoute("/api/wifi", HTTP_GET, [=](AsyncWebServerRequest *request) {
 		FileSystemModule* fs_module = FileSystemModule::GetInstance();
 		String fileContent = fs_module->readFile(credsFilePath);
 		AsyncWebServerResponse *response = request->beginResponse(200, "application/json", fileContent);
-		response->addHeader("Access-Control-Allow-Origin", "*");
 
 		request->send(response);
 	});
@@ -107,7 +110,6 @@ void WifiModule::onSetup() {
 		saveNetwork(wifiCredentials{ ssid, password });
 
 		AsyncWebServerResponse *response = request->beginResponse(201, "text/plain", "Credentials saved");
-		response->addHeader("Access-Control-Allow-Origin", "*");
 
 		request->send(response);
 	});
@@ -137,21 +139,20 @@ void WifiModule::onSetup() {
 		}
 
 		AsyncWebServerResponse *response = request->beginResponse(200);
-		response->addHeader("Access-Control-Allow-Origin", "*");
 
 		request->send(response);
 	});
 
 	server_module->registerRoute("/api/wifi", HTTP_DELETE, [=](AsyncWebServerRequest *request) {
-		if (!request->hasParam("index", true)) {
+		if (!request->hasParam("index")) {
 			request->send_P(422, "text/plain", "provide index");
 		}
-		const int index = request->getParam("index", true)->value().toInt();
+
+		const int index = request->getParam("index")->value().toInt();
 
 		deleteNetwork(index);
 
 		AsyncWebServerResponse *response = request->beginResponse(200);
-		response->addHeader("Access-Control-Allow-Origin", "*");
 
 		request->send(response);
 	});

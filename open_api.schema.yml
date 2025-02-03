@@ -8,11 +8,28 @@ servers:
     description: local network
 paths:
   /api/wifi:
-    post:
-      operationId: saveWifiNetwork
+    get:
+      operationId: getSavedCredentials
       tags:
         - wifi
-      summary: Save wifi network
+      summary: get saved credentials
+      responses:
+        "200":
+          description: The request was successful, and the server has returned the
+            requested resource in the response body.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/wifiCredentials"
+      parameters: []
+      description: Get saved wifi networks credentials
+    post:
+      operationId: saveCredentials
+      tags:
+        - wifi
+      summary: save credentials
       responses:
         "201":
           description: The request was successful, and a new resource was created.
@@ -27,11 +44,12 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               $ref: "#/components/schemas/wifiCredentials"
+      parameters: []
     patch:
       operationId: editSavedCredentials
       tags:
         - wifi
-      summary: Edit saved credentials
+      summary: edit saved credentials
       responses:
         "200":
           description: The request was successful, and the server has returned the
@@ -52,12 +70,13 @@ paths:
         content:
           application/x-www-form-urlencoded:
             schema:
-              $ref: "#/components/schemas/wifiCredentials"
+              $ref: "#/components/schemas/wifiCredentialsEdit"
+      parameters: []
     delete:
-      operationId: removesSavedCredentials
+      operationId: removeSavedCredentials
       tags:
         - wifi
-      summary: Removes saved credentials
+      summary: remove saved credentials
       responses:
         "204":
           description: The request was successful, but there is no content to return in
@@ -71,23 +90,30 @@ paths:
                     type: number
                 required:
                   - index
-    get:
-      operationId: getWifiNetworks
+      parameters:
+        - in: query
+          name: index
+          required: true
+          style: form
+          description: index of deleted network
+          explode: true
+          schema:
+            type: number
+          allowReserved: false
+    options:
+      operationId: preflightRequest
       tags:
         - wifi
-      summary: get wifi networks
+      summary: preflight request
       responses:
         "200":
           description: The request was successful, and the server has returned the
             requested resource in the response body.
           content:
-            application/json:
+            text/plain:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/wifiCredentials"
+                type: "null"
       parameters: []
-      description: Get saved wifi networks credentials
 components:
   schemas:
     wifiCredentials:
@@ -101,17 +127,21 @@ components:
         - ssid
       description: A simplified representation of a wifiCredentials, typically used in
         list views.
-    wifiCredentialsSummary:
+    wifiCredentialsEdit:
       type: object
       properties:
         ssid:
           type: string
         password:
           type: string
+        index:
+          type: number
+        to:
+          type: number
       required:
         - ssid
-      description: A simplified representation of a wifiCredentials, typically used in
-        list views.
+        - index
+      description: ""
       x-fiddle-dto-info:
         baseSchemaName: wifiCredentials
   responses:

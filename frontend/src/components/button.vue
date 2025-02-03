@@ -32,6 +32,7 @@ defineProps({
   font-weight: 600;
   border: none;
   text-transform: capitalize;
+  cursor: pointer;
 }
 
 .button--square {

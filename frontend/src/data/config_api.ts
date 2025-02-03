@@ -15,10 +15,11 @@ export interface WifiCredentials {
   password?: string
 }
 
-/** A simplified representation of a wifiCredentials, typically used in list views. */
-export interface WifiCredentialsSummary {
+export interface WifiCredentialsEdit {
   ssid: string
   password?: string
+  index: number
+  to?: number
 }
 
 export type QueryParamsType = Record<string | number, any>
@@ -253,14 +254,30 @@ export class HttpClient<SecurityDataType = unknown> {
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
   api = {
     /**
+     * @description Get saved wifi networks credentials
+     *
+     * @tags wifi
+     * @name GetSavedCredentials
+     * @summary get saved credentials
+     * @request GET:/api/wifi
+     */
+    getSavedCredentials: (params: RequestParams = {}) =>
+      this.request<WifiCredentials[], any>({
+        path: `/api/wifi`,
+        method: 'GET',
+        format: 'json',
+        ...params,
+      }),
+
+    /**
      * No description
      *
      * @tags wifi
-     * @name SaveWifiNetwork
-     * @summary Save wifi network
+     * @name SaveCredentials
+     * @summary save credentials
      * @request POST:/api/wifi
      */
-    saveWifiNetwork: (data: WifiCredentials, params: RequestParams = {}) =>
+    saveCredentials: (data: WifiCredentials, params: RequestParams = {}) =>
       this.request<string, any>({
         path: `/api/wifi`,
         method: 'POST',
@@ -274,10 +291,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags wifi
      * @name EditSavedCredentials
-     * @summary Edit saved credentials
+     * @summary edit saved credentials
      * @request PATCH:/api/wifi
      */
-    editSavedCredentials: (data: WifiCredentials, params: RequestParams = {}) =>
+    editSavedCredentials: (data: WifiCredentialsEdit, params: RequestParams = {}) =>
       this.request<string, string>({
         path: `/api/wifi`,
         method: 'PATCH',
@@ -290,11 +307,17 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags wifi
-     * @name RemovesSavedCredentials
-     * @summary Removes saved credentials
+     * @name RemoveSavedCredentials
+     * @summary remove saved credentials
      * @request DELETE:/api/wifi
      */
-    removesSavedCredentials: (params: RequestParams = {}) =>
+    removeSavedCredentials: (
+      query: {
+        /** index of deleted network */
+        index: number
+      },
+      params: RequestParams = {},
+    ) =>
       this.request<
         {
           index: number
@@ -303,22 +326,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       >({
         path: `/api/wifi`,
         method: 'DELETE',
+        query: query,
         ...params,
       }),
 
     /**
-     * @description Get saved wifi networks credentials
+     * No description
      *
      * @tags wifi
-     * @name GetWifiNetworks
-     * @summary get wifi networks
-     * @request GET:/api/wifi
+     * @name PreflightRequest
+     * @summary preflight request
+     * @request OPTIONS:/api/wifi
      */
-    getWifiNetworks: (params: RequestParams = {}) =>
-      this.request<WifiCredentials[], any>({
+    preflightRequest: (params: RequestParams = {}) =>
+      this.request<null, any>({
         path: `/api/wifi`,
-        method: 'GET',
-        format: 'json',
+        method: 'OPTIONS',
         ...params,
       }),
   }

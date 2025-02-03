@@ -4,17 +4,34 @@ import ContentSection from '@/components/content-section.vue'
 import List from '@/components/list.vue'
 import Accordion from '@/components/accordion.vue'
 import WifiCredentialsForm from '@/components/wifi-credentials-form.vue'
-import { useWifiList } from '@/data/wifi'
+import { useDeleteWifi, useEditWifi, useSaveWifi, useWifiList } from '@/data/wifi'
 import { computed, ref } from 'vue'
+import type { WifiCredentials } from '@/data/config_api'
 
 const { data } = useWifiList()
+const deleteWifi = useDeleteWifi()
+const editWifi = useEditWifi()
+const saveWifi = useSaveWifi()
 
 const listAdopted = computed(() => {
   const items = data.value?.map((item, index) => ({ slot: 'wifi', key: index.toString(), ...item }))
-  items?.push({ slot: 'new', key: data.value?.length.toString() || '0' })
-  items?.push({ slot: 'ap', key: ((data.value?.length || 0) + 1).toString() || '1' })
+  items?.push({ slot: 'new', key: data.value?.length.toString() || '0', ssid: '' })
+  items?.push({ slot: 'ap', key: ((data.value?.length || 0) + 1).toString() || '1', ssid: '' })
   return items
 })
+
+const handleDelete = (index: number) => {
+  deleteWifi({ index })
+}
+const handleEdit = (index: number, data: WifiCredentials) => {
+  editWifi({
+    index,
+    ...data,
+  })
+}
+const handleSave = (data: WifiCredentials) => {
+  saveWifi(data)
+}
 </script>
 
 <template>
@@ -30,7 +47,12 @@ const listAdopted = computed(() => {
             <p>{{ `${Number(key) + 1}.  ${ssid}` }}</p>
           </template>
           <template #details>
-            <WifiCredentialsForm delitable :default-values="{ ssid, password }" />
+            <WifiCredentialsForm
+              delitable
+              :default-values="{ ssid, password }"
+              @delete="handleDelete(Number(key))"
+              @save="(data) => handleEdit(Number(key), data)"
+            />
           </template>
         </Accordion>
       </template>
@@ -40,7 +62,7 @@ const listAdopted = computed(() => {
             <p>Save new network</p>
           </template>
           <template #details>
-            <WifiCredentialsForm />
+            <WifiCredentialsForm @save="handleSave" />
           </template>
         </Accordion>
       </template>
