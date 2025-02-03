@@ -35,8 +35,8 @@ const hadndleSave = () => {
 
 <template>
   <form class="wifi-credentials-form" @click.stop="">
-    <Input placeholder="SSID" type="text" v-model="ssid" />
-    <Input placeholder="Password" type="password" v-model="password" />
+    <Input placeholder="SSID" type="text" name="ssid" v-model="ssid" />
+    <Input placeholder="Password" type="password" name="password" v-model="password" />
     <div class="actions">
       <Button v-if="delitable" type="button" @click="handleDelete" square>
         <IconClose />

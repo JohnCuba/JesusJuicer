@@ -10,6 +10,7 @@ export const useWifiList = () => {
       },
     })
   })
+
   return useSWRV('/wifi/list', apiClient.api.getSavedCredentials, { refreshInterval: 5000 })
 }
 
@@ -36,6 +37,19 @@ export const useDeleteWifi = () => {
 
   return async (...data: Parameters<typeof apiClient.api.removeSavedCredentials>) => {
     await apiClient.api.removeSavedCredentials(...data)
+    mutate()
+  }
+}
+
+export const useGetAp = () => {
+  return useSWRV('/wifi/ap', apiClient.api.getApCredentials)
+}
+
+export const useSetAp = () => {
+  const { mutate } = useSWRV('/wifi/ap', null)
+
+  return async (...data: Parameters<typeof apiClient.api.setApCredentials>) => {
+    await apiClient.api.setApCredentials(...data)
     mutate()
   }
 }

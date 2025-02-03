@@ -117,6 +117,34 @@ void WifiModule::onSetup() {
 
 	ServerModule* server_module = ServerModule::GetInstance();
 
+	server_module->registerRoute("/api/wifi/ap", HTTP_GET, [=](AsyncWebServerRequest *request) {
+		JsonDocument responseBody;
+		JsonObject root = responseBody.to<JsonObject>();
+
+		wifiCredentials creds = getSelfAPCredentials();
+
+		root["ssid"].set(creds.ssid);
+		root["password"].set(creds.password);
+
+		AsyncWebServerResponse *response = request->beginResponse(200, "application/json", responseBody.as<String>());
+		request->send(response);
+	});
+
+	server_module->registerRoute("/api/wifi/ap", HTTP_PATCH, [=](AsyncWebServerRequest *request) {
+		if (!request->hasParam("ssid", true)) {
+			return request->send_P(422, "text/plain", "provide ssid");
+		}
+
+		String ssid = request->getParam("ssid", true)->value();
+		String password = request->hasParam("password", true) ? request->getParam("password", true)->value() : String();
+
+		JsonDocument responseBody;
+
+		setSelfAPCredentials(wifiCredentials{ssid, password});
+
+		request->send_P(200, "text/plain", "saved");
+	});
+
 	server_module->registerRoute("/api/wifi", HTTP_OPTIONS, [=](AsyncWebServerRequest *request) {
 		request->send_P(200, "text/plain", "ok");
 	});

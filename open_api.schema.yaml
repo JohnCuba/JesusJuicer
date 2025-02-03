@@ -3,37 +3,41 @@ info:
   title: Aquaphobic
   version: 0.0.0
   description: Api schema of aquaphobic device
+  x-fiddle-import-file: true
 servers:
-- url: http://192.168.0.194
-  description: local network
+  - url: http://192.168.0.194
+    description: local network
 paths:
   /api/wifi:
     get:
       tags:
-      - wifi
+        - wifi
       summary: get saved credentials
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/wifiCredentials'
-          description: The request was successful, and the server has returned the requested resource in the response body.
+                  $ref: "#/components/schemas/wifiCredentials"
+                title: GetSavedCredentialsOk
+          description: The request was successful, and the server has returned the
+            requested resource in the response body.
       parameters: []
       description: Get saved wifi networks credentials
       operationId: getSavedCredentials
     post:
       tags:
-      - wifi
+        - wifi
       summary: save credentials
       responses:
-        '201':
+        "201":
           content:
             text/plain:
               schema:
                 type: string
+                title: SaveCredentialsCreated
           description: The request was successful, and a new resource was created.
       parameters: []
       operationId: saveCredentials
@@ -41,25 +45,28 @@ paths:
         content:
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/wifiCredentials'
+              $ref: "#/components/schemas/wifiCredentials"
         required: true
-        description: ''
+        description: ""
     patch:
       tags:
-      - wifi
+        - wifi
       summary: edit saved credentials
       responses:
-        '200':
+        "200":
           content:
             text/plain:
               schema:
                 type: string
-          description: The request was successful, and the server has returned the requested resource in the response body.
-        '422':
+                title: EditSavedCredentialsOk
+          description: The request was successful, and the server has returned the
+            requested resource in the response body.
+        "422":
           content:
             text/plain:
               schema:
                 type: string
+                title: EditSavedCredentialsUnprocessableEntity
           description: Provided invalid data
       parameters: []
       operationId: editSavedCredentials
@@ -67,66 +74,107 @@ paths:
         content:
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/wifiCredentialsEdit'
+              $ref: "#/components/schemas/wifiCredentialsEdit"
         required: true
-        description: ''
+        description: ""
     delete:
       tags:
-      - wifi
+        - wifi
       summary: remove saved credentials
       responses:
-        '204':
+        "204":
           content:
             application/x-www-form-urlencoded:
               schema:
                 type: object
                 required:
-                - index
+                  - index
                 properties:
                   index:
                     type: number
-          description: The request was successful, but there is no content to return in the response.
+                title: RemoveSavedCredentialsNoContent
+          description: The request was successful, but there is no content to return in
+            the response.
       parameters:
-      - in: query
-        name: index
-        style: form
-        schema:
-          type: number
-        explode: true
-        required: true
-        description: index of deleted network
-        allowReserved: false
+        - in: query
+          name: index
+          style: form
+          schema:
+            type: number
+          explode: true
+          required: true
+          description: index of deleted network
+          allowReserved: false
       operationId: removeSavedCredentials
     options:
       tags:
-      - wifi
+        - wifi
       summary: preflight request
       responses:
-        '200':
+        "200":
           content:
             text/plain:
               schema:
-                type: 'null'
-          description: The request was successful, and the server has returned the requested resource in the response body.
+                type: "null"
+                title: PreflightRequestOk
+          description: The request was successful, and the server has returned the
+            requested resource in the response body.
       parameters: []
       operationId: preflightRequest
+  /api/wifi/ap:
+    get:
+      operationId: getApCredentials
+      tags:
+        - ap
+        - wifi
+      summary: get ap credentials
+      responses:
+        "200":
+          description: The request was successful, and the server has returned the
+            requested resource in the response body.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wifiCredentials"
+      parameters: []
+    patch:
+      operationId: setApCredentials
+      tags:
+        - ap
+      summary: set ap credentials
+      responses:
+        "200":
+          description: The request was successful, and the server has returned the
+            requested resource in the response body.
+          content:
+            text/plain:
+              schema:
+                type: string
+      requestBody:
+        required: true
+        description: ""
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/wifiCredentials"
 components:
   schemas:
     wifiCredentials:
       type: object
       required:
-      - ssid
+        - ssid
       properties:
         ssid:
           type: string
         password:
           type: string
-      description: A simplified representation of a wifiCredentials, typically used in list views.
+      description: A simplified representation of a wifiCredentials, typically used in
+        list views.
     wifiCredentialsEdit:
       type: object
       required:
-      - ssid
-      - index
+        - ssid
+        - index
       properties:
         to:
           type: number
@@ -136,7 +184,7 @@ components:
           type: number
         password:
           type: string
-      description: ''
+      description: ""
       x-fiddle-dto-info:
         baseSchemaName: wifiCredentials
   responses:
@@ -146,30 +194,33 @@ components:
           schema:
             type: object
             required:
-            - message
+              - message
             properties:
               message:
                 type: string
-      description: The server cannot find the requested resource. The endpoint may be invalid or the resource may no longer exist.
+      description: The server cannot find the requested resource. The endpoint may be
+        invalid or the resource may no longer exist.
     BadRequest:
       content:
         application/json:
           schema:
             type: object
             required:
-            - message
+              - message
             properties:
               errors:
                 type: array
                 items:
                   type: object
                   required:
-                  - message
+                    - message
                   properties:
                     message:
                       type: string
               message:
                 type: string
-      description: The server could not understand the request due to invalid syntax. The client should modify the request and try again.
+      description: The server could not understand the request due to invalid syntax.
+        The client should modify the request and try again.
 tags:
-- name: wifi
+  - name: wifi
+  - name: ap
