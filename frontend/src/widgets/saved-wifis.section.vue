@@ -60,6 +60,7 @@ const handleSave = (data: WifiCredentials) => {
           </template>
           <template #details>
             <WifiCredentialsForm
+              :key="key"
               delitable
               :default-values="{ ssid, password }"
               @delete="handleDelete(Number(key))"
@@ -74,7 +75,7 @@ const handleSave = (data: WifiCredentials) => {
             <p>Save new network</p>
           </template>
           <template #details>
-            <WifiCredentialsForm @save="handleSave" />
+            <WifiCredentialsForm @save="handleSave" key="new" />
           </template>
         </Accordion>
       </template>

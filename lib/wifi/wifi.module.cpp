@@ -117,6 +117,20 @@ void WifiModule::onSetup() {
 
 	ServerModule* server_module = ServerModule::GetInstance();
 
+	server_module->registerRoute("/api/wifi/state", HTTP_GET, [=](AsyncWebServerRequest *request) {
+		JsonDocument responseBody;
+		JsonObject root = responseBody.to<JsonObject>();
+
+		String mode = String(WiFi.getMode());
+		
+		root["mode"].set(mode);
+		root["ip"].set(mode == "1" ? WiFi.localIP().toString() : WiFi.softAPIP().toString());
+		root["rssi"].set(WiFi.RSSI());
+
+		AsyncWebServerResponse *response = request->beginResponse(200, "application/json", responseBody.as<String>());
+		request->send(response);
+	});
+
 	server_module->registerRoute("/api/wifi/ap", HTTP_GET, [=](AsyncWebServerRequest *request) {
 		JsonDocument responseBody;
 		JsonObject root = responseBody.to<JsonObject>();
@@ -170,11 +184,11 @@ void WifiModule::onSetup() {
 
 	server_module->registerRoute("/api/wifi", HTTP_PATCH, [=](AsyncWebServerRequest *request) {
 		if (!request->hasParam("index", true)) {
-			request->send_P(422, "text/plain", "provide index");
+			return request->send_P(422, "text/plain", "provide index");
 		}
 
 		if (!request->hasParam("ssid", true)) {
-			request->send_P(422, "text/plain", "provide ssid");
+			return request->send_P(422, "text/plain", "provide ssid");
 		}
 
 		const int index = request->getParam("index", true)->value().toInt();
@@ -189,7 +203,7 @@ void WifiModule::onSetup() {
 				wifiCredentials{ssid, password}
 			);
 		} catch (const std::invalid_argument& e) {
-			request->send_P(422, "text/plain", e.what());
+			return request->send_P(422, "text/plain", e.what());
 		}
 
 		AsyncWebServerResponse *response = request->beginResponse(200);
@@ -199,7 +213,7 @@ void WifiModule::onSetup() {
 
 	server_module->registerRoute("/api/wifi", HTTP_DELETE, [=](AsyncWebServerRequest *request) {
 		if (!request->hasParam("index")) {
-			request->send_P(422, "text/plain", "provide index");
+			return request->send_P(422, "text/plain", "provide index");
 		}
 
 		const int index = request->getParam("index")->value().toInt();
@@ -210,8 +224,6 @@ void WifiModule::onSetup() {
 
 		request->send(response);
 	});
-
-	// TODO: /api/wifi/self get, put
 
 	logg.info("setup connection mode");
 

@@ -2,6 +2,8 @@ import useSWRV from 'swrv'
 import { apiClient } from './config'
 import { onMounted } from 'vue'
 
+export { wifiModes } from './config'
+
 export const useWifiList = () => {
   onMounted(() => {
     apiClient.api.preflightRequest({
@@ -53,3 +55,5 @@ export const useSetAp = () => {
     mutate()
   }
 }
+
+export const useGetWifiState = () => useSWRV('/wifi/state', apiClient.api.getWifiState)

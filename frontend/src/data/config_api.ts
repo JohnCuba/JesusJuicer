@@ -22,6 +22,8 @@ export interface WifiCredentialsEdit {
   password?: string
 }
 
+export type WifiMode = '0' | '1' | '2' | '3'
+
 export type QueryParamsType = Record<string | number, any>
 export type ResponseFormat = keyof Omit<Body, 'body' | 'bodyUsed'>
 
@@ -374,6 +376,29 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         method: 'PATCH',
         body: data,
         type: ContentType.UrlEncoded,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags wifi
+     * @name GetWifiState
+     * @summary get wifi state
+     * @request GET:/api/wifi/state
+     */
+    getWifiState: (params: RequestParams = {}) =>
+      this.request<
+        {
+          mode: WifiMode
+          ip: string
+          rssi: number
+        },
+        any
+      >({
+        path: `/api/wifi/state`,
+        method: 'GET',
+        format: 'json',
         ...params,
       }),
   }
