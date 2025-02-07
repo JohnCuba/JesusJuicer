@@ -70,7 +70,7 @@ export enum ContentType {
 }
 
 export class HttpClient<SecurityDataType = unknown> {
-  public baseUrl: string = 'http://192.168.0.194'
+  public baseUrl: string = ''
   private securityData: SecurityDataType | null = null
   private securityWorker?: ApiConfig<SecurityDataType>['securityWorker']
   private abortControllers = new Map<CancelToken, AbortController>()
@@ -247,7 +247,6 @@ export class HttpClient<SecurityDataType = unknown> {
 /**
  * @title Aquaphobic
  * @version 0.0.0
- * @baseUrl http://192.168.0.194
  *
  * Api schema of aquaphobic device
  */

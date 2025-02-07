@@ -4,9 +4,6 @@ info:
   version: 0.0.0
   description: Api schema of aquaphobic device
   x-fiddle-import-file: true
-servers:
-  - url: http://192.168.0.194
-    description: local network
 paths:
   /api/wifi:
     get:
@@ -22,7 +19,8 @@ paths:
                 items:
                   $ref: "#/components/schemas/wifiCredentials"
                 title: GetSavedCredentialsOk
-          description: The request was successful, and the server has returned the
+          description:
+            The request was successful, and the server has returned the
             requested resource in the response body.
       parameters: []
       description: Get saved wifi networks credentials
@@ -59,7 +57,8 @@ paths:
               schema:
                 type: string
                 title: EditSavedCredentialsOk
-          description: The request was successful, and the server has returned the
+          description:
+            The request was successful, and the server has returned the
             requested resource in the response body.
         "422":
           content:
@@ -93,7 +92,8 @@ paths:
                   index:
                     type: number
                 title: RemoveSavedCredentialsNoContent
-          description: The request was successful, but there is no content to return in
+          description:
+            The request was successful, but there is no content to return in
             the response.
       parameters:
         - in: query
@@ -117,7 +117,8 @@ paths:
               schema:
                 type: "null"
                 title: PreflightRequestOk
-          description: The request was successful, and the server has returned the
+          description:
+            The request was successful, and the server has returned the
             requested resource in the response body.
       parameters: []
       operationId: preflightRequest
@@ -130,7 +131,8 @@ paths:
       summary: get ap credentials
       responses:
         "200":
-          description: The request was successful, and the server has returned the
+          description:
+            The request was successful, and the server has returned the
             requested resource in the response body.
           content:
             application/json:
@@ -144,7 +146,8 @@ paths:
       summary: set ap credentials
       responses:
         "200":
-          description: The request was successful, and the server has returned the
+          description:
+            The request was successful, and the server has returned the
             requested resource in the response body.
           content:
             text/plain:
@@ -168,7 +171,8 @@ components:
           type: string
         password:
           type: string
-      description: A simplified representation of a wifiCredentials, typically used in
+      description:
+        A simplified representation of a wifiCredentials, typically used in
         list views.
     wifiCredentialsEdit:
       type: object
@@ -198,7 +202,8 @@ components:
             properties:
               message:
                 type: string
-      description: The server cannot find the requested resource. The endpoint may be
+      description:
+        The server cannot find the requested resource. The endpoint may be
         invalid or the resource may no longer exist.
     BadRequest:
       content:
@@ -219,7 +224,8 @@ components:
                       type: string
               message:
                 type: string
-      description: The server could not understand the request due to invalid syntax.
+      description:
+        The server could not understand the request due to invalid syntax.
         The client should modify the request and try again.
 tags:
   - name: wifi
