@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <ESPAsyncWebServer.h>
+#include <ESPmDNS.h>
 #include "LittleFS.h"
 #include "server.module.hpp"
 #include "tds.module.hpp"
@@ -27,6 +28,8 @@ void ServerModule::registerRoute(const char *uri, WebRequestMethodComposite meth
 };
 
 void ServerModule::onSetup() {
+	MDNS.begin("aqua");
+
 	server.serveStatic("/", LittleFS, "/public/");
 
 	server.on("/*", HTTP_GET, [](AsyncWebServerRequest *request) {

@@ -4,9 +4,6 @@ info:
   version: 0.0.0
   description: Api schema of aquaphobic device
   x-fiddle-import-file: true
-servers:
-  - url: http://192.168.0.194
-    description: local network
 paths:
   /api/wifi:
     get:
@@ -150,6 +147,7 @@ paths:
             text/plain:
               schema:
                 type: string
+                title: SetApCredentialsOk
       requestBody:
         required: true
         description: ""
@@ -157,6 +155,32 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               $ref: "#/components/schemas/wifiCredentials"
+  /api/wifi/state:
+    get:
+      operationId: getWifiState
+      tags:
+        - wifi
+      summary: get wifi state
+      responses:
+        "200":
+          description: The request was successful, and the server has returned the
+            requested resource in the response body.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mode:
+                    $ref: "#/components/schemas/wifiMode"
+                  ip:
+                    type: string
+                  rssi:
+                    type: number
+                required:
+                  - mode
+                  - ip
+                  - rssi
+      parameters: []
 components:
   schemas:
     wifiCredentials:
@@ -187,6 +211,16 @@ components:
       description: ""
       x-fiddle-dto-info:
         baseSchemaName: wifiCredentials
+    wifiMode:
+      oneOf:
+        - type: string
+          default: "0"
+          enum:
+            - "0"
+            - "1"
+            - "2"
+            - "3"
+      description: ""
   responses:
     NotFound:
       content:
