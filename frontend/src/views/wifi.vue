@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import PageHeader from '@/components/page-header.vue'
-import AccessPointSection from '@/widgets/access-point.section.vue'
-import SavedWifisSection from '@/widgets/saved-wifis.section.vue'
+import SelfApSection from '@/widgets/self-ap.section.vue'
+import NetworkApSection from '@/widgets/network-ap.section.vue'
 </script>
 
 <template>
   <PageHeader with-nav title="Wi-Fi networking" subtitle="Aquaphobic" />
-  <SavedWifisSection />
-  <AccessPointSection />
+  <NetworkApSection />
+  <SelfApSection />
 </template>

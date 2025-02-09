@@ -6,103 +6,6 @@ info:
   x-fiddle-import-file: true
 paths:
   /api/wifi:
-    get:
-      tags:
-        - wifi
-      summary: get saved credentials
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/wifiCredentials"
-                title: GetSavedCredentialsOk
-          description: The request was successful, and the server has returned the
-            requested resource in the response body.
-      parameters: []
-      description: Get saved wifi networks credentials
-      operationId: getSavedCredentials
-    post:
-      tags:
-        - wifi
-      summary: save credentials
-      responses:
-        "201":
-          content:
-            text/plain:
-              schema:
-                type: string
-                title: SaveCredentialsCreated
-          description: The request was successful, and a new resource was created.
-      parameters: []
-      operationId: saveCredentials
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: "#/components/schemas/wifiCredentials"
-        required: true
-        description: ""
-    patch:
-      tags:
-        - wifi
-      summary: edit saved credentials
-      responses:
-        "200":
-          content:
-            text/plain:
-              schema:
-                type: string
-                title: EditSavedCredentialsOk
-          description: The request was successful, and the server has returned the
-            requested resource in the response body.
-        "422":
-          content:
-            text/plain:
-              schema:
-                type: string
-                title: EditSavedCredentialsUnprocessableEntity
-          description: Provided invalid data
-      parameters: []
-      operationId: editSavedCredentials
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: "#/components/schemas/wifiCredentialsEdit"
-        required: true
-        description: ""
-    delete:
-      tags:
-        - wifi
-      summary: remove saved credentials
-      responses:
-        "204":
-          content:
-            application/x-www-form-urlencoded:
-              schema:
-                type: object
-                required:
-                  - index
-                properties:
-                  index:
-                    type: number
-                title: RemoveSavedCredentialsNoContent
-          description: The request was successful, but there is no content to return in
-            the response.
-      parameters:
-        - in: query
-          name: index
-          style: form
-          schema:
-            type: number
-          explode: true
-          required: true
-          description: index of deleted network
-          allowReserved: false
-      operationId: removeSavedCredentials
     options:
       tags:
         - wifi
@@ -120,11 +23,76 @@ paths:
       operationId: preflightRequest
   /api/wifi/ap:
     get:
-      operationId: getApCredentials
       tags:
         - ap
         - wifi
       summary: get ap credentials
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wifiCredentials"
+          description: The request was successful, and the server has returned the
+            requested resource in the response body.
+      parameters: []
+      operationId: getApCredentials
+    patch:
+      tags:
+        - ap
+        - wifi
+      summary: set ap credentials
+      responses:
+        "200":
+          content:
+            text/plain:
+              schema:
+                type: string
+                title: SetApCredentialsOk
+          description: The request was successful, and the server has returned the
+            requested resource in the response body.
+      operationId: setApCredentials
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/wifiCredentials"
+        required: true
+        description: ""
+  /api/wifi/state:
+    get:
+      tags:
+        - wifi
+      summary: get wifi state
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - mode
+                  - ip
+                  - rssi
+                properties:
+                  ip:
+                    type: string
+                  mode:
+                    $ref: "#/components/schemas/wifiMode"
+                  rssi:
+                    type: number
+                title: GetWifiStateOk
+          description: The request was successful, and the server has returned the
+            requested resource in the response body.
+      parameters: []
+      operationId: getWifiState
+  /api/wifi/network:
+    get:
+      operationId: getNetworkApCredentials
+      tags:
+        - network
+        - wifi
+      summary: get network ap credentials
       responses:
         "200":
           description: The request was successful, and the server has returned the
@@ -133,12 +101,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/wifiCredentials"
-      parameters: []
     patch:
-      operationId: setApCredentials
+      operationId: setNetworkApCredentials
       tags:
-        - ap
-      summary: set ap credentials
+        - network
+        - wifi
+      summary: set network ap credentials
       responses:
         "200":
           description: The request was successful, and the server has returned the
@@ -147,7 +115,6 @@ paths:
             text/plain:
               schema:
                 type: string
-                title: SetApCredentialsOk
       requestBody:
         required: true
         description: ""
@@ -155,34 +122,31 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               $ref: "#/components/schemas/wifiCredentials"
-  /api/wifi/state:
-    get:
-      operationId: getWifiState
+    delete:
+      operationId: delNetworkApCredentials
       tags:
-        - wifi
-      summary: get wifi state
+        - network
+      summary: del network ap credentials
       responses:
         "200":
           description: The request was successful, and the server has returned the
             requested resource in the response body.
           content:
-            application/json:
+            text/plain:
               schema:
-                type: object
-                properties:
-                  mode:
-                    $ref: "#/components/schemas/wifiMode"
-                  ip:
-                    type: string
-                  rssi:
-                    type: number
-                required:
-                  - mode
-                  - ip
-                  - rssi
-      parameters: []
+                type: string
 components:
   schemas:
+    wifiMode:
+      oneOf:
+        - enum:
+            - "0"
+            - "1"
+            - "2"
+            - "3"
+          type: string
+          default: "0"
+      description: ""
     wifiCredentials:
       type: object
       required:
@@ -211,16 +175,6 @@ components:
       description: ""
       x-fiddle-dto-info:
         baseSchemaName: wifiCredentials
-    wifiMode:
-      oneOf:
-        - type: string
-          default: "0"
-          enum:
-            - "0"
-            - "1"
-            - "2"
-            - "3"
-      description: ""
   responses:
     NotFound:
       content:
@@ -255,6 +209,19 @@ components:
                 type: string
       description: The server could not understand the request due to invalid syntax.
         The client should modify the request and try again.
+    Ok:
+      description: The request was successful, and the server has returned the
+        requested resource in the response body.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+            required:
+              - data
 tags:
   - name: wifi
   - name: ap
+  - name: network

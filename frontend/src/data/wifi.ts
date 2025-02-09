@@ -4,7 +4,7 @@ import { onMounted } from 'vue'
 
 export { wifiModes } from './config'
 
-export const useWifiList = () => {
+export const useGetNetworkAP = () => {
   onMounted(() => {
     apiClient.api.preflightRequest({
       headers: {
@@ -13,41 +13,32 @@ export const useWifiList = () => {
     })
   })
 
-  return useSWRV('/wifi/list', apiClient.api.getSavedCredentials, { refreshInterval: 5000 })
+  return useSWRV('/wifi/network', apiClient.api.getNetworkApCredentials, { refreshInterval: 5000 })
 }
 
-export const useSaveWifi = () => {
-  const { mutate } = useSWRV('/wifi/list', null)
+export const useSetNetworkAP = () => {
+  const { mutate } = useSWRV('/wifi/network', null)
 
-  return async (...data: Parameters<typeof apiClient.api.saveCredentials>) => {
-    await apiClient.api.saveCredentials(...data)
+  return async (...data: Parameters<typeof apiClient.api.setNetworkApCredentials>) => {
+    await apiClient.api.setNetworkApCredentials(...data)
     mutate()
   }
 }
 
-export const useEditWifi = () => {
-  const { mutate } = useSWRV('/wifi/list', null)
+export const useDelNetworkAP = () => {
+  const { mutate } = useSWRV('/wifi/network', null)
 
-  return async (...data: Parameters<typeof apiClient.api.editSavedCredentials>) => {
-    await apiClient.api.editSavedCredentials(...data)
+  return async (...data: Parameters<typeof apiClient.api.delNetworkApCredentials>) => {
+    await apiClient.api.delNetworkApCredentials(...data)
     mutate()
   }
 }
 
-export const useDeleteWifi = () => {
-  const { mutate } = useSWRV('/wifi/list', null)
-
-  return async (...data: Parameters<typeof apiClient.api.removeSavedCredentials>) => {
-    await apiClient.api.removeSavedCredentials(...data)
-    mutate()
-  }
-}
-
-export const useGetAp = () => {
+export const useGetSelfAp = () => {
   return useSWRV('/wifi/ap', apiClient.api.getApCredentials)
 }
 
-export const useSetAp = () => {
+export const useSetSelfAp = () => {
   const { mutate } = useSWRV('/wifi/ap', null)
 
   return async (...data: Parameters<typeof apiClient.api.setApCredentials>) => {

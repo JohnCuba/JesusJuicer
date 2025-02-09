@@ -10,8 +10,13 @@
 const long interval = 5000;
 const String credsFilePath = "/private/credentials.json";
 
-const String selfApSSID = "aquaphobic";
-const String selfApPassword = "yoitsmeman";
+const wifiCredentials defaultSelfAP = wifiCredentials{
+	ssid: "aquaphobic",
+	password: "yoitsmeman",
+};
+
+const char selfAPStoreKey[8] = "self-ap";
+const char networkAPStoreKey[11] = "network-ap";
 
 WifiModule* WifiModule::pinstance_{nullptr};
 
@@ -23,96 +28,38 @@ WifiModule *WifiModule::GetInstance() {
 	return pinstance_;
 }
 
-JsonArray putNetwork(JsonArray array, int index, wifiCredentials creds) {
-	array[index].set(creds);
-
-	return array;
-}
-
-JsonArray moveNetwork(JsonArray array, int index, int to) {
-	if (index == to) return array;
-
-	JsonObject obj = array[index];
-
-	array[index].set(array[to]);
-	array[to].set(obj);
-
-	return array;
-}
-
-wifiCredentials getSelfAPCredentials() {
+wifiCredentials getAPCredentials(const char *key, wifiCredentials defaultCreds = wifiCredentials{ssid: "", password: ""}) {
 	Preferences preferences;
-  preferences.begin("self-ap", false);
+  preferences.begin(key, true);
 
-  String ssid = preferences.getString("ssid", selfApSSID); 
-  String password = preferences.getString("password", selfApPassword);
+  String ssid = preferences.getString("ssid", defaultCreds.ssid); 
+  String password = preferences.getString("password", defaultCreds.password);
 
 	preferences.end();
 
 	return wifiCredentials{ssid, password};
 }
 
-void setSelfAPCredentials(wifiCredentials creds) {
+void setAPCredentials(const char *key, wifiCredentials creds) {
 	Preferences preferences;
-  preferences.begin("self-ap", false);
+  preferences.begin(key, false);
 
   preferences.putString("ssid", creds.ssid); 
-  preferences.getString("password", creds.password);
+  preferences.putString("password", creds.password);
 
 	preferences.end();
 }
 
-void WifiModule::editNetwork(int index, int toIndex, wifiCredentials creds) {
-  JsonDocument doc = getNetworks();
-	JsonArray savedCreds = doc.as<JsonArray>();
+void deleteAPCredentials(const char *key) {
+	Preferences preferences;
+  preferences.begin(key, false);
 
-	if (index >= savedCreds.size()) {
-		throw std::invalid_argument("received invalid index");
-	}
+	preferences.clear();
 
-	putNetwork(savedCreds, index, creds);
-	if (index != toIndex) {
-		// TODO: clean up shit here
-		int resolvedTo = std::max(std::min(String(savedCreds.size()).toInt(), String(toIndex).toInt()), String(0).toInt());
-		moveNetwork(savedCreds, index, resolvedTo);
-	}
-
-	setNetworks(doc);
+	preferences.end();
 }
 
-void WifiModule::saveNetwork(wifiCredentials creds) {
-  JsonDocument doc = getNetworks();
-	JsonArray savedCreds = doc.as<JsonArray>();
-
-	savedCreds.add(creds);
-
-	setNetworks(doc);
-}
-
-void WifiModule::deleteNetwork(int index) {
-  JsonDocument doc = getNetworks();
-	JsonArray savedCreds = doc.as<JsonArray>();
-
-	savedCreds.remove(index);
-
-	setNetworks(doc);
-}
-
-JsonDocument WifiModule::getNetworks() {
-	FileSystemModule* fs_module = FileSystemModule::GetInstance();
-	String fileContent = fs_module->readFile(credsFilePath);
-  JsonDocument doc;
-  deserializeJson(doc, fileContent);
-	return doc;
-}
-
-void WifiModule::setNetworks(JsonDocument doc) {
-	FileSystemModule* fs_module = FileSystemModule::GetInstance();
-	fs_module->writeFile(credsFilePath, doc);
-}
-
-void WifiModule::onSetup() {
-	logg.info("start setup");
+void WifiModule::registerServerRoutes() {
 	logg.info("setup server routes");
 
 	ServerModule* server_module = ServerModule::GetInstance();
@@ -135,7 +82,7 @@ void WifiModule::onSetup() {
 		JsonDocument responseBody;
 		JsonObject root = responseBody.to<JsonObject>();
 
-		wifiCredentials creds = getSelfAPCredentials();
+		wifiCredentials creds = getAPCredentials(selfAPStoreKey, defaultSelfAP);
 
 		root["ssid"].set(creds.ssid);
 		root["password"].set(creds.password);
@@ -154,76 +101,55 @@ void WifiModule::onSetup() {
 
 		JsonDocument responseBody;
 
-		setSelfAPCredentials(wifiCredentials{ssid, password});
+		setAPCredentials(selfAPStoreKey, wifiCredentials{ssid, password});
 
 		request->send_P(200, "text/plain", "saved");
+	});
+
+	server_module->registerRoute("/api/wifi/network", HTTP_GET, [=](AsyncWebServerRequest *request) {
+		JsonDocument responseBody;
+		JsonObject root = responseBody.to<JsonObject>();
+
+		wifiCredentials creds = getAPCredentials(networkAPStoreKey);
+
+		root["ssid"].set(creds.ssid);
+		root["password"].set(creds.password);
+
+		AsyncWebServerResponse *response = request->beginResponse(200, "application/json", responseBody.as<String>());
+		request->send(response);
+	});
+
+	server_module->registerRoute("/api/wifi/network", HTTP_PATCH, [=](AsyncWebServerRequest *request) {
+		if (!request->hasParam("ssid", true)) {
+			return request->send_P(422, "text/plain", "provide ssid");
+		}
+
+		String ssid = request->getParam("ssid", true)->value();
+		String password = request->hasParam("password", true) ? request->getParam("password", true)->value() : String();
+		logg.info(ssid + " " + password);
+
+		JsonDocument responseBody;
+
+		setAPCredentials(networkAPStoreKey, wifiCredentials{ssid, password});
+
+		request->send_P(200, "text/plain", "saved");
+	});
+
+	server_module->registerRoute("/api/wifi/network", HTTP_DELETE, [=](AsyncWebServerRequest *request) {
+		deleteAPCredentials(networkAPStoreKey);
+
+		request->send_P(200, "text/plain", "deleted");
 	});
 
 	server_module->registerRoute("/api/wifi", HTTP_OPTIONS, [=](AsyncWebServerRequest *request) {
 		request->send_P(200, "text/plain", "ok");
 	});
+}
 
-	server_module->registerRoute("/api/wifi", HTTP_GET, [=](AsyncWebServerRequest *request) {
-		FileSystemModule* fs_module = FileSystemModule::GetInstance();
-		String fileContent = fs_module->readFile(credsFilePath);
-		AsyncWebServerResponse *response = request->beginResponse(200, "application/json", fileContent);
+void WifiModule::onSetup() {
+	logg.info("start setup");
 
-		request->send(response);
-	});
-
-	server_module->registerRoute("/api/wifi", HTTP_POST, [=](AsyncWebServerRequest *request) {
-		const String ssid = request->getParam("ssid", true)->value();
-		const String password = request->getParam("password", true)->value();
-
-		saveNetwork(wifiCredentials{ ssid, password });
-
-		AsyncWebServerResponse *response = request->beginResponse(201, "text/plain", "Credentials saved");
-
-		request->send(response);
-	});
-
-	server_module->registerRoute("/api/wifi", HTTP_PATCH, [=](AsyncWebServerRequest *request) {
-		if (!request->hasParam("index", true)) {
-			return request->send_P(422, "text/plain", "provide index");
-		}
-
-		if (!request->hasParam("ssid", true)) {
-			return request->send_P(422, "text/plain", "provide ssid");
-		}
-
-		const int index = request->getParam("index", true)->value().toInt();
-		const int to = request->hasParam("to", true) ? request->getParam("to", true)->value().toInt() : index;
-		String ssid = request->getParam("ssid", true)->value();
-		String password = request->hasParam("password", true) ? request->getParam("password", true)->value() : String();
-
-		try {
-			editNetwork(
-				index,
-				to,
-				wifiCredentials{ssid, password}
-			);
-		} catch (const std::invalid_argument& e) {
-			return request->send_P(422, "text/plain", e.what());
-		}
-
-		AsyncWebServerResponse *response = request->beginResponse(200);
-
-		request->send(response);
-	});
-
-	server_module->registerRoute("/api/wifi", HTTP_DELETE, [=](AsyncWebServerRequest *request) {
-		if (!request->hasParam("index")) {
-			return request->send_P(422, "text/plain", "provide index");
-		}
-
-		const int index = request->getParam("index")->value().toInt();
-
-		deleteNetwork(index);
-
-		AsyncWebServerResponse *response = request->beginResponse(200);
-
-		request->send(response);
-	});
+	registerServerRoutes();
 
 	logg.info("setup connection mode");
 
@@ -238,44 +164,35 @@ void WifiModule::onSetup() {
 }
 
 bool WifiModule::connectToAP() {
-	JsonDocument credsDoc = getNetworks();
-	JsonArray savedCreds = credsDoc.as<JsonArray>();
-	logg.info("found " + String(savedCreds.size()) + " saved networks");
+	wifiCredentials creds = getAPCredentials(networkAPStoreKey);
 
-	if (savedCreds.size() < 1) {
+	if (creds.ssid.isEmpty()) {
 		logg.info("no saved networks finded");
 		return false;
 	};
 
 	WiFi.mode(WIFI_MODE_STA);
 
-	for (int i = 0; i < savedCreds.size(); ++i) {
-		wifiCredentials creds = savedCreds[i].as<wifiCredentials>();
+	logg.info("trying connecting to: " + creds.ssid + " " + creds.password);
 
-		logg.info("trying connecting to: " + creds.ssid);
+	WiFi.begin(creds.ssid, creds.password);
 
-		WiFi.begin(creds.ssid, creds.password);
+	unsigned long currentMillis = millis();
+	unsigned long previousMillis = currentMillis;
 
-		unsigned long currentMillis = millis();
-		unsigned long previousMillis = currentMillis;
+	while(WiFi.status() != WL_CONNECTED) {
+		currentMillis = millis();
 
-		while(WiFi.status() != WL_CONNECTED) {
-			currentMillis = millis();
-
-			if (currentMillis - previousMillis >= interval) {
-				logg.info("failed connecting to: " + creds.ssid);
-				break;
-			}
-		}
-
-		if (WiFi.status() == WL_CONNECTED) {
-			logg.info("connected to " + creds.ssid + " go to " + WiFi.localIP().toString());
-			// TODO: Move connected network on 0 index
-			return true;
+		if (currentMillis - previousMillis >= interval) {
+			logg.info("failed connecting to: " + creds.ssid);
+			break;
 		}
 	}
 
-	logg.info("Saved networks: " + String(savedCreds.size()) + ", but no one there");
+	if (WiFi.status() == WL_CONNECTED) {
+		logg.info("connected to " + creds.ssid + " go to " + WiFi.localIP().toString());
+		return true;
+	}
 
 	return false;
 };
@@ -283,7 +200,7 @@ bool WifiModule::connectToAP() {
 void WifiModule::createAP() {
 	WiFi.mode(WIFI_MODE_AP);
 
-	wifiCredentials creds = getSelfAPCredentials();
+	wifiCredentials creds = getAPCredentials(selfAPStoreKey, defaultSelfAP);
 	WiFi.softAP(creds.ssid, creds.password);
 
 	logg.info("AP is created: " + WiFi.softAPSSID());

@@ -9,6 +9,8 @@
  * ---------------------------------------------------------------
  */
 
+export type WifiMode = '0' | '1' | '2' | '3'
+
 /** A simplified representation of a wifiCredentials, typically used in list views. */
 export interface WifiCredentials {
   ssid: string
@@ -21,8 +23,6 @@ export interface WifiCredentialsEdit {
   index: number
   password?: string
 }
-
-export type WifiMode = '0' | '1' | '2' | '3'
 
 export type QueryParamsType = Record<string | number, any>
 export type ResponseFormat = keyof Omit<Body, 'body' | 'bodyUsed'>
@@ -255,83 +255,6 @@ export class HttpClient<SecurityDataType = unknown> {
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
   api = {
     /**
-     * @description Get saved wifi networks credentials
-     *
-     * @tags wifi
-     * @name GetSavedCredentials
-     * @summary get saved credentials
-     * @request GET:/api/wifi
-     */
-    getSavedCredentials: (params: RequestParams = {}) =>
-      this.request<WifiCredentials[], any>({
-        path: `/api/wifi`,
-        method: 'GET',
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags wifi
-     * @name SaveCredentials
-     * @summary save credentials
-     * @request POST:/api/wifi
-     */
-    saveCredentials: (data: WifiCredentials, params: RequestParams = {}) =>
-      this.request<string, any>({
-        path: `/api/wifi`,
-        method: 'POST',
-        body: data,
-        type: ContentType.UrlEncoded,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags wifi
-     * @name EditSavedCredentials
-     * @summary edit saved credentials
-     * @request PATCH:/api/wifi
-     */
-    editSavedCredentials: (data: WifiCredentialsEdit, params: RequestParams = {}) =>
-      this.request<string, string>({
-        path: `/api/wifi`,
-        method: 'PATCH',
-        body: data,
-        type: ContentType.UrlEncoded,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags wifi
-     * @name RemoveSavedCredentials
-     * @summary remove saved credentials
-     * @request DELETE:/api/wifi
-     */
-    removeSavedCredentials: (
-      query: {
-        /** index of deleted network */
-        index: number
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<
-        {
-          index: number
-        },
-        any
-      >({
-        path: `/api/wifi`,
-        method: 'DELETE',
-        query: query,
-        ...params,
-      }),
-
-    /**
      * No description
      *
      * @tags wifi
@@ -365,7 +288,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags ap
+     * @tags ap, wifi
      * @name SetApCredentials
      * @summary set ap credentials
      * @request PATCH:/api/wifi/ap
@@ -390,8 +313,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     getWifiState: (params: RequestParams = {}) =>
       this.request<
         {
-          mode: WifiMode
           ip: string
+          mode: WifiMode
           rssi: number
         },
         any
@@ -399,6 +322,54 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/api/wifi/state`,
         method: 'GET',
         format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags network, wifi
+     * @name GetNetworkApCredentials
+     * @summary get network ap credentials
+     * @request GET:/api/wifi/network
+     */
+    getNetworkApCredentials: (params: RequestParams = {}) =>
+      this.request<WifiCredentials, any>({
+        path: `/api/wifi/network`,
+        method: 'GET',
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags network, wifi
+     * @name SetNetworkApCredentials
+     * @summary set network ap credentials
+     * @request PATCH:/api/wifi/network
+     */
+    setNetworkApCredentials: (data: WifiCredentials, params: RequestParams = {}) =>
+      this.request<string, any>({
+        path: `/api/wifi/network`,
+        method: 'PATCH',
+        body: data,
+        type: ContentType.UrlEncoded,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags network
+     * @name DelNetworkApCredentials
+     * @summary del network ap credentials
+     * @request DELETE:/api/wifi/network
+     */
+    delNetworkApCredentials: (params: RequestParams = {}) =>
+      this.request<string, any>({
+        path: `/api/wifi/network`,
+        method: 'DELETE',
         ...params,
       }),
   }

@@ -2,11 +2,11 @@
 import ContentSection from '@/components/content-section.vue'
 import WifiCredentialsForm from '@/components/wifi-credentials-form.vue'
 import type { WifiCredentials } from '@/data/config_api'
-import { useGetAp, useSetAp } from '@/data/wifi'
+import { useGetSelfAp, useSetSelfAp } from '@/data/wifi'
 
-const { data, isLoading } = useGetAp()
+const { data, isLoading } = useGetSelfAp()
 
-const setApCreds = useSetAp()
+const setApCreds = useSetSelfAp()
 
 const handleSave = (creds: WifiCredentials) => {
   setApCreds(creds)
@@ -14,7 +14,7 @@ const handleSave = (creds: WifiCredentials) => {
 </script>
 
 <template>
-  <ContentSection title="Access point" subtitle="Edit credentials of self access point">
+  <ContentSection title="Self" subtitle="Edit credentials of self access point">
     <WifiCredentialsForm v-if="!isLoading" :default-values="data" @save="handleSave" />
   </ContentSection>
 </template>
