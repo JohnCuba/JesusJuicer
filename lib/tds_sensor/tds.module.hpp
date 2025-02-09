@@ -17,7 +17,9 @@ class TDSModule {
 
 	float averageVoltage = 0;
 	float rawTdsValue = 0;
-	float temperature = 25; 
+	float temperature = 25;
+
+	void registerServerRoutes();
 
 	protected:
 	TDSModule() {}

@@ -41,8 +41,7 @@ float TDSModule::getValue() {
   return rawTdsValue;
 }
 
-void TDSModule::onSetup() {
-	logg.info("start setup");
+void TDSModule::registerServerRoutes() {
 	logg.info("setup server routes");
 
 	ServerModule* server_module = ServerModule::GetInstance();
@@ -50,6 +49,12 @@ void TDSModule::onSetup() {
   server_module->registerRoute("/api/tds", HTTP_GET, [=](AsyncWebServerRequest *request) {
 		request->send(200, "text/plain", String(getValue()));
 	});
+}
+
+void TDSModule::onSetup() {
+	logg.info("start setup");
+
+  registerServerRoutes();
 
   pinMode(sensorPin, INPUT);
 
