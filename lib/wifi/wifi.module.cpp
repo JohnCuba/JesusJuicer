@@ -1,7 +1,6 @@
 #include <WiFi.h>
 #include <Preferences.h>
 
-#include "AsyncJson.h"
 #include "ArduinoJson.h"
 #include "wifi.module.hpp"
 #include "wifi_credentials.hpp"
