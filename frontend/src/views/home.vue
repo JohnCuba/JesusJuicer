@@ -11,6 +11,7 @@ import WifiTile from '@/widgets/wifi.tile.vue'
 
 <style scoped>
 .header {
-  min-height: 100vh;
+  min-height: 100dvh;
+  transition: min-height 0.1s;
 }
 </style>
