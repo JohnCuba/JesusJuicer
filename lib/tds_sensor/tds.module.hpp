@@ -28,6 +28,5 @@ class TDSModule {
 	public:
 	static TDSModule *GetInstance();
 	void onSetup();
-	void onLoop();
 	float getValue();
 };
