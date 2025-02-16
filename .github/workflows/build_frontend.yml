@@ -1,0 +1,27 @@
+name: publish frontend artifact
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish_frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: build
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: |
+          cd ./frontend
+          bun install
+          bun run build
+
+      - name: public archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: public
+          path: data/public
