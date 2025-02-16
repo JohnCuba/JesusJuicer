@@ -247,10 +247,10 @@ export class HttpClient<SecurityDataType = unknown> {
 }
 
 /**
- * @title Aquaphobic
+ * @title Juicer
  * @version 0.0.0
  *
- * Api schema of aquaphobic device
+ * Api schema of juicer device
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
   api = {
@@ -370,6 +370,21 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<string, any>({
         path: `/api/wifi/network`,
         method: 'DELETE',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags tds
+     * @name GetTdsSensorValue
+     * @summary Get tds sensor value
+     * @request GET:/api/tds
+     */
+    getTdsSensorValue: (params: RequestParams = {}) =>
+      this.request<string, any>({
+        path: `/api/tds`,
+        method: 'GET',
         ...params,
       }),
   }

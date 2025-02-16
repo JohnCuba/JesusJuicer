@@ -28,7 +28,7 @@ void ServerModule::registerRoute(const char *uri, WebRequestMethodComposite meth
 };
 
 void ServerModule::onSetup() {
-	MDNS.begin("aqua");
+	MDNS.begin("juicer");
 
 	server.serveStatic("/", LittleFS, "/public/");
 

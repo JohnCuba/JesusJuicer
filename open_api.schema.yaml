@@ -1,8 +1,8 @@
 openapi: 3.1.0
 info:
-  title: Aquaphobic
+  title: Juicer
   version: 0.0.0
-  description: Api schema of aquaphobic device
+  description: Api schema of juicer device
   x-fiddle-import-file: true
 paths:
   /api/wifi:
@@ -17,7 +17,8 @@ paths:
               schema:
                 type: "null"
                 title: PreflightRequestOk
-          description: The request was successful, and the server has returned the
+          description:
+            The request was successful, and the server has returned the
             requested resource in the response body.
       parameters: []
       operationId: preflightRequest
@@ -33,7 +34,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/wifiCredentials"
-          description: The request was successful, and the server has returned the
+          description:
+            The request was successful, and the server has returned the
             requested resource in the response body.
       parameters: []
       operationId: getApCredentials
@@ -49,7 +51,8 @@ paths:
               schema:
                 type: string
                 title: SetApCredentialsOk
-          description: The request was successful, and the server has returned the
+          description:
+            The request was successful, and the server has returned the
             requested resource in the response body.
       operationId: setApCredentials
       requestBody:
@@ -70,6 +73,7 @@ paths:
             application/json:
               schema:
                 type: object
+                title: GetWifiStateOk
                 required:
                   - mode
                   - ip
@@ -81,55 +85,75 @@ paths:
                     $ref: "#/components/schemas/wifiMode"
                   rssi:
                     type: number
-                title: GetWifiStateOk
-          description: The request was successful, and the server has returned the
+          description:
+            The request was successful, and the server has returned the
             requested resource in the response body.
       parameters: []
       operationId: getWifiState
   /api/wifi/network:
     get:
-      operationId: getNetworkApCredentials
       tags:
         - network
         - wifi
       summary: get network ap credentials
       responses:
         "200":
-          description: The request was successful, and the server has returned the
-            requested resource in the response body.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/wifiCredentials"
+          description:
+            The request was successful, and the server has returned the
+            requested resource in the response body.
+      operationId: getNetworkApCredentials
     patch:
-      operationId: setNetworkApCredentials
       tags:
         - network
         - wifi
       summary: set network ap credentials
       responses:
         "200":
-          description: The request was successful, and the server has returned the
-            requested resource in the response body.
           content:
             text/plain:
               schema:
                 type: string
+                title: SetNetworkApCredentialsOk
+          description:
+            The request was successful, and the server has returned the
+            requested resource in the response body.
+      operationId: setNetworkApCredentials
       requestBody:
-        required: true
-        description: ""
         content:
           application/x-www-form-urlencoded:
             schema:
               $ref: "#/components/schemas/wifiCredentials"
+        required: true
+        description: ""
     delete:
-      operationId: delNetworkApCredentials
       tags:
         - network
       summary: del network ap credentials
       responses:
         "200":
-          description: The request was successful, and the server has returned the
+          content:
+            text/plain:
+              schema:
+                type: string
+                title: DelNetworkApCredentialsOk
+          description:
+            The request was successful, and the server has returned the
+            requested resource in the response body.
+      operationId: delNetworkApCredentials
+  /api/tds:
+    get:
+      operationId: getTdsSensorValue
+      tags:
+        - tds
+      summary: Get tds sensor value
+      responses:
+        "200":
+          description:
+            The request was successful, and the server has returned the
             requested resource in the response body.
           content:
             text/plain:
@@ -156,7 +180,8 @@ components:
           type: string
         password:
           type: string
-      description: A simplified representation of a wifiCredentials, typically used in
+      description:
+        A simplified representation of a wifiCredentials, typically used in
         list views.
     wifiCredentialsEdit:
       type: object
@@ -176,6 +201,18 @@ components:
       x-fiddle-dto-info:
         baseSchemaName: wifiCredentials
   responses:
+    Ok:
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                type: object
+      description: The request was successful, and the server has returned the
+        requested resource in the response body.
     NotFound:
       content:
         application/json:
@@ -186,7 +223,8 @@ components:
             properties:
               message:
                 type: string
-      description: The server cannot find the requested resource. The endpoint may be
+      description:
+        The server cannot find the requested resource. The endpoint may be
         invalid or the resource may no longer exist.
     BadRequest:
       content:
@@ -207,21 +245,11 @@ components:
                       type: string
               message:
                 type: string
-      description: The server could not understand the request due to invalid syntax.
+      description:
+        The server could not understand the request due to invalid syntax.
         The client should modify the request and try again.
-    Ok:
-      description: The request was successful, and the server has returned the
-        requested resource in the response body.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              data:
-                type: object
-            required:
-              - data
 tags:
   - name: wifi
   - name: ap
   - name: network
+  - name: tds

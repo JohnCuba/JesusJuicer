@@ -1,10 +1,10 @@
 {
-  "name": "aquaphobic",
+  "name": "juicer",
   "version": "0.0.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "bunx --bun vite",
+    "dev": "bunx --bun vite --host",
     "build": "bunx --bun vite build",
     "type-check": "bunx --bun vue-tsc --build",
     "lint": "bunx --bun eslint . --fix",

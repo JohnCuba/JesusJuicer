@@ -5,7 +5,7 @@ import { useRoute } from 'vue-router'
 defineProps({
   title: {
     type: String,
-    default: 'Aquaphobic',
+    default: 'Juicer',
   },
   subtitle: {
     type: String,

@@ -10,7 +10,7 @@ const long interval = 5000;
 const String credsFilePath = "/private/credentials.json";
 
 const wifiCredentials defaultSelfAP = wifiCredentials{
-	ssid: "aquaphobic",
+	ssid: "juicer",
 	password: "yoitsmeman",
 };
 
@@ -177,7 +177,7 @@ bool WifiModule::connectToAP() {
 	WiFi.begin(creds.ssid, creds.password);
 
 	unsigned long currentMillis = millis();
-	unsigned long previousMillis = currentMillis;
+	unsigned long const previousMillis = currentMillis;
 
 	while(WiFi.status() != WL_CONNECTED) {
 		currentMillis = millis();
