@@ -36,37 +36,12 @@ TDSModule *TDSModule::GetInstance() {
 }
 
 float TDSModule::getValue() {
-  if (rawTdsValue < 0 || rawTdsValue > 2000) return 0;
-
-  return rawTdsValue;
-}
-
-void TDSModule::registerServerRoutes() {
-	logg.info("setup server routes");
-
-	ServerModule* server_module = ServerModule::GetInstance();
-
-  server_module->registerRoute("/api/tds", HTTP_GET, [=](AsyncWebServerRequest *request) {
-		request->send(200, "text/plain", String(getValue()));
-	});
-}
-
-void TDSModule::onSetup() {
-	logg.info("start setup");
-
-  registerServerRoutes();
-
-  pinMode(sensorPin, INPUT);
-
-	logg.info("end setup");
-}
-
-void TDSModule::onLoop() {
   static unsigned long analogSampleTimepoint = millis();
 
 	if(millis()-analogSampleTimepoint > 40U){
 		analogSampleTimepoint = millis();
     analogBuffer[analogBufferIndex] = analogRead(sensorPin);
+
     analogBufferIndex++;
     if(analogBufferIndex == sCount){ 
       analogBufferIndex = 0;
@@ -91,4 +66,32 @@ void TDSModule::onLoop() {
       rawTdsValue=(133.42*compensationVoltage*compensationVoltage*compensationVoltage - 255.86*compensationVoltage*compensationVoltage + 857.39*compensationVoltage)*0.5;
     }
   }
+
+  if (rawTdsValue < 0 || rawTdsValue > 2000) return 0;
+
+  return rawTdsValue;
+}
+
+void TDSModule::registerServerRoutes() {
+	logg.info("setup server routes");
+
+	ServerModule* server_module = ServerModule::GetInstance();
+
+  server_module->registerRoute("/api/tds", HTTP_GET, [=](AsyncWebServerRequest *request) {
+		request->send_P(200, "text/plain", String(getValue()).c_str());
+	});
+
+	server_module->registerRoute("/api/tds", HTTP_OPTIONS, [=](AsyncWebServerRequest *request) {
+		request->send_P(200, "text/plain", "ok");
+	});
+}
+
+void TDSModule::onSetup() {
+	logg.info("start setup");
+
+  registerServerRoutes();
+
+  pinMode(sensorPin, INPUT);
+
+	logg.info("end setup");
 }
