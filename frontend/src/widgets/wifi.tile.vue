@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import { defineAsyncComponent } from 'vue'
-import { useGetWifiState, wifiModes } from '@/data/wifi'
-import { RSSItoWifiSignalQualityIndex, wifiSignalQuality } from '@/data/config'
+import {
+  useGetWifiState,
+  wifiModes,
+  RSSItoWifiSignalQualityIndex,
+  wifiSignalQuality,
+} from '@/data/wifi'
+import HomeTile from '@/components/home-tile.vue'
 
 const IconWifi = defineAsyncComponent(() => import('@/assets/icons/wifi.svg'))
 
@@ -9,38 +14,19 @@ const { data: wifiState } = useGetWifiState()
 </script>
 
 <template>
-  <div class="wifi-tile">
-    <span class="wifi-tile__info wifi-tile__info--label">Wi-Fi</span>
-    <span class="wifi-tile__info">ip: {{ wifiState?.ip }}</span>
-    <span class="wifi-tile__info">mode: {{ wifiModes[wifiState?.mode || '0'] }}</span>
-    <div
-      class="wifi-tile__icon"
-      :class="[wifiSignalQuality[RSSItoWifiSignalQualityIndex(wifiState?.rssi)]]"
-    >
+  <HomeTile>
+    <span class="info label">Wi-Fi</span>
+    <span class="info">{{ wifiModes[wifiState?.mode || '0'] }}</span>
+    <span class="info">{{ wifiState?.ip }}</span>
+    <div class="icon" :class="[wifiSignalQuality[RSSItoWifiSignalQualityIndex(wifiState?.rssi)]]">
       <IconWifi />
     </div>
-    <router-link :to="'/wifi'" class="wifi-tile__link" />
-  </div>
+    <router-link :to="'/wifi'" class="link" />
+  </HomeTile>
 </template>
 
 <style scoped>
-.wifi-tile {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  aspect-ratio: 1;
-  height: 10rem;
-  width: 10rem;
-  padding: 0.6rem;
-  color: var(--palette-contrast);
-  backdrop-filter: brightness(0.6);
-  box-shadow: 0px 10px 15px -3px var(--palette-neutral);
-  border-radius: 0.6rem;
-  overflow: hidden;
-}
-
-.wifi-tile__link {
+.link {
   position: absolute;
   top: 0;
   left: 0;
@@ -49,17 +35,17 @@ const { data: wifiState } = useGetWifiState()
   z-index: 2;
 }
 
-.wifi-tile__info {
+.info {
   display: inline-block;
   z-index: 1;
   font-size: large;
 }
 
-.wifi-tile__info--label {
+.label {
   font-size: x-large;
 }
 
-.wifi-tile__icon {
+.icon {
   position: absolute;
   top: 0;
   left: 50%;
@@ -68,7 +54,7 @@ const { data: wifiState } = useGetWifiState()
   opacity: 0.4;
 }
 
-.wifi-tile__icon > :deep(svg) > * {
+.icon > :deep(svg) > * {
   transition: fill 1s;
 }
 

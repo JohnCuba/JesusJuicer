@@ -1,20 +1,26 @@
 import useSWRV from 'swrv'
-import { apiClient } from './config'
-import { onMounted } from 'vue'
 
-export { wifiModes } from './config'
+import { apiClient, type WifiMode } from './config'
 
-export const useGetNetworkAP = () => {
-  onMounted(() => {
-    apiClient.api.preflightRequest({
-      headers: {
-        'Access-Control-Request-Method': 'GET, POST, PATCH, DELETE, OPTIONS',
-      },
-    })
-  })
+export const wifiModes: Record<WifiMode, string> = {
+  '0': 'Off',
+  '1': 'station',
+  '2': 'soft-AP',
+  '3': 'station + soft-AP',
+} as const
 
-  return useSWRV('/wifi/network', apiClient.api.getNetworkApCredentials, { refreshInterval: 5000 })
+export const wifiSignalQuality = ['no_signal', 'very_low', 'low', 'good', 'very_good'] as const
+
+export const RSSItoWifiSignalQualityIndex = (rssi: number = -1000) => {
+  if (rssi >= -60) return 4
+  else if (rssi >= -70) return 3
+  else if (rssi >= -90) return 2
+  else if (rssi >= -100) return 1
+  return 0
 }
+
+export const useGetNetworkAP = () =>
+  useSWRV('/wifi/network', apiClient.api.getNetworkApCredentials, { refreshInterval: 5000 })
 
 export const useSetNetworkAP = () => {
   const { mutate } = useSWRV('/wifi/network', null)
@@ -34,9 +40,7 @@ export const useDelNetworkAP = () => {
   }
 }
 
-export const useGetSelfAp = () => {
-  return useSWRV('/wifi/ap', apiClient.api.getApCredentials)
-}
+export const useGetSelfAp = () => useSWRV('/wifi/ap', apiClient.api.getApCredentials)
 
 export const useSetSelfAp = () => {
   const { mutate } = useSWRV('/wifi/ap', null)
