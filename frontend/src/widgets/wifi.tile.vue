@@ -14,27 +14,17 @@ const { data: wifiState } = useGetWifiState()
 </script>
 
 <template>
-  <HomeTile>
+  <HomeTile url-path="/wifi">
     <span class="info label">Wi-Fi</span>
     <span class="info">{{ wifiModes[wifiState?.mode || '0'] }}</span>
     <span class="info">{{ wifiState?.ip }}</span>
     <div class="icon" :class="[wifiSignalQuality[RSSItoWifiSignalQualityIndex(wifiState?.rssi)]]">
       <IconWifi />
     </div>
-    <router-link :to="'/wifi'" class="link" />
   </HomeTile>
 </template>
 
 <style scoped>
-.link {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 2;
-}
-
 .info {
   display: inline-block;
   z-index: 1;
