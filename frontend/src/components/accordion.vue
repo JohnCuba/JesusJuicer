@@ -2,19 +2,10 @@
 import { defineAsyncComponent } from 'vue'
 const IconChevronDown = defineAsyncComponent(() => import('@/assets/icons/chevron-down.svg'))
 
-defineProps({
-  isOpen: {
-    type: Boolean,
-    default: false,
-  },
-})
-
-const emit = defineEmits<{
-  click: []
-}>()
+const isOpen = defineModel<boolean>()
 
 const handleClickSummary = () => {
-  emit('click')
+  isOpen.value = !isOpen.value
 }
 </script>
 
