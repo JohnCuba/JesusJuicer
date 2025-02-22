@@ -27,6 +27,10 @@ void ServerModule::registerRoute(const char *uri, WebRequestMethodComposite meth
 	server.on(uri, method, onRequest);
 };
 
+void ServerModule::registerRoute(const char *uri, WebRequestMethodComposite method, ArRequestHandlerFunction onRequest, ArUploadHandlerFunction onUpload) {
+	server.on(uri, method, onRequest, onUpload);
+};
+
 void ServerModule::onSetup() {
 	MDNS.begin("juicer");
 

@@ -159,6 +159,59 @@ paths:
             text/plain:
               schema:
                 type: string
+                title: GetTdsSensorValueOk
+  /api/update/fw:
+    get:
+      operationId: getFirmwareVersion
+      tags:
+        - update
+      summary: get firmware version
+      responses:
+        "200":
+          description: The request was successful, and the server has returned firmware version.
+          content:
+            text/plain:
+              schema:
+                type: string
+    post:
+      operationId: uploadFirmware
+      tags:
+        - update
+      summary: upload firmware
+      responses:
+        "200":
+          description: The request was successful, and updating complete.
+          content:
+            text/plain:
+              schema:
+                type: string
+      requestBody:
+        required: true
+        description: ""
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+  /api/update/fs:
+    post:
+      operationId: uploadFilesystem
+      tags:
+        - update
+      summary: upload filesystem
+      requestBody:
+        required: true
+        description: ""
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+      responses:
+        "200":
+          description: The request was successful, and updating complete.
+          content:
+            text/plain:
+              schema:
+                type: string
 components:
   schemas:
     wifiMode:
@@ -253,3 +306,4 @@ tags:
   - name: ap
   - name: network
   - name: tds
+  - name: update
