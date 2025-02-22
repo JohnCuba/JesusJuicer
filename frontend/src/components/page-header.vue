@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 
 defineProps({
   title: {
@@ -17,10 +17,10 @@ defineProps({
   },
 })
 
-const MENU_ITEMS = [{ name: 'home' }, { name: 'wi-fi' }]
-const route = useRoute()
-
-const menu = computed(() => MENU_ITEMS.filter(({ name }) => name !== route.name))
+const router = useRouter()
+const menu = computed(() =>
+  router.getRoutes().filter(({ name }) => name !== router.currentRoute.value.name),
+)
 </script>
 
 <template>
