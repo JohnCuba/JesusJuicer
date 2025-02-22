@@ -13,8 +13,7 @@ export default defineConfig({
     vueDevTools(),
     svgLoader(),
     gzipPlugin({
-      // @ts-expect-error -
-      customCompression: (content) => Bun.gzipSync(Buffer.from(content)),
+      customCompression: (content: string | Buffer) => Buffer.from(Bun.gzipSync(content)),
     }),
     cleanPlugin({
       targets: ['../data/public/**/*.html', '../data/public/**/*.js', '../data/public/**/*.css'],
