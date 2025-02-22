@@ -9,8 +9,7 @@ const { data: tdsData } = useGetTds()
 </script>
 
 <template>
-  <HomeTile>
-    <span class="info label">TDS</span>
+  <HomeTile label="TDS">
     <span class="info">{{ tdsData }} ppm</span>
     <div class="icon">
       <IconPpm />
@@ -23,10 +22,6 @@ const { data: tdsData } = useGetTds()
   display: inline-block;
   z-index: 1;
   font-size: large;
-}
-
-.label {
-  font-size: x-large;
 }
 
 .icon {

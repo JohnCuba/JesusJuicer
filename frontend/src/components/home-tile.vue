@@ -1,11 +1,13 @@
 <script lang="ts" setup>
 defineProps({
   urlPath: String,
+  label: String,
 })
 </script>
 
 <template>
   <div class="tile">
+    <span class="label">{{ label }}</span>
     <slot />
     <router-link v-if="urlPath" :to="urlPath" class="link" />
   </div>
@@ -16,7 +18,6 @@ defineProps({
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
   aspect-ratio: 1;
   height: 10rem;
   width: 10rem;
@@ -26,6 +27,13 @@ defineProps({
   box-shadow: 0px 10px 15px -3px var(--palette-neutral);
   border-radius: 0.6rem;
   overflow: hidden;
+}
+
+.label {
+  display: inline-block;
+  flex: 1;
+  font-size: x-large;
+  z-index: 1;
 }
 
 .link {
