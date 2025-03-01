@@ -139,10 +139,6 @@ void WifiModule::registerServerRoutes() {
 
 		request->send_P(200, "text/plain", "deleted");
 	});
-
-	server_module->registerRoute("/api/wifi", HTTP_OPTIONS, [=](AsyncWebServerRequest *request) {
-		request->send_P(200, "text/plain", "ok");
-	});
 }
 
 void WifiModule::onSetup() {

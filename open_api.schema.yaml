@@ -5,10 +5,8 @@ info:
   description: Api schema of juicer device
   x-fiddle-import-file: true
 paths:
-  /api/wifi:
+  /api:
     options:
-      tags:
-        - wifi
       summary: preflight request
       responses:
         "200":

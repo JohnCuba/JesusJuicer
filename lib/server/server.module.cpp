@@ -20,6 +20,7 @@ ServerModule::ServerModule() :
 {
 	DefaultHeaders::Instance().addHeader("Access-Control-Allow-Origin", "*");
 	DefaultHeaders::Instance().addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
+	DefaultHeaders::Instance().addHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Custom-Header");
 	DefaultHeaders::Instance().addHeader("Access-Control-Allow-Private-Network", "true");
 };
 
@@ -42,10 +43,8 @@ void ServerModule::onSetup() {
 		request->send(response);
 	});
 
-	server.on("/api/tds", HTTP_GET, [=](AsyncWebServerRequest *request) {
-		TDSModule* tdsModule = TDSModule::GetInstance();
-
-		request->send(200, "text/plain", String(tdsModule->getValue()));
+	server.on("/api/*", HTTP_OPTIONS, [](AsyncWebServerRequest *request) {
+		request->send_P(200, "text/plain", "ok");
 	});
 
 	server.begin();
