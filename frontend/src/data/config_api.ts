@@ -257,14 +257,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags wifi
      * @name PreflightRequest
      * @summary preflight request
-     * @request OPTIONS:/api/wifi
+     * @request OPTIONS:/api
      */
     preflightRequest: (params: RequestParams = {}) =>
       this.request<null, any>({
-        path: `/api/wifi`,
+        path: `/api`,
         method: 'OPTIONS',
         ...params,
       }),
@@ -385,6 +384,55 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<string, any>({
         path: `/api/tds`,
         method: 'GET',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags update
+     * @name GetFirmwareVersion
+     * @summary get firmware version
+     * @request GET:/api/update/fw
+     */
+    getFirmwareVersion: (params: RequestParams = {}) =>
+      this.request<string, any>({
+        path: `/api/update/fw`,
+        method: 'GET',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags update
+     * @name UploadFirmware
+     * @summary upload firmware
+     * @request POST:/api/update/fw
+     */
+    uploadFirmware: (data: object, params: RequestParams = {}) =>
+      this.request<string, any>({
+        path: `/api/update/fw`,
+        method: 'POST',
+        body: data,
+        type: ContentType.FormData,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags update
+     * @name UploadFilesystem
+     * @summary upload filesystem
+     * @request POST:/api/update/fs
+     */
+    uploadFilesystem: (data: object, params: RequestParams = {}) =>
+      this.request<string, any>({
+        path: `/api/update/fs`,
+        method: 'POST',
+        body: data,
+        type: ContentType.FormData,
         ...params,
       }),
   }

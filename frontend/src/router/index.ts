@@ -13,6 +13,11 @@ const router = createRouter({
       name: 'wi-fi',
       component: () => import('@/views/wifi.vue'),
     },
+    {
+      path: '/update',
+      name: 'update',
+      component: () => import('@/views/update.vue'),
+    },
   ],
 })
 
