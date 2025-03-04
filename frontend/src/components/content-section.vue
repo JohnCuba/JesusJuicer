@@ -1,20 +1,14 @@
 <script setup lang="ts">
 defineProps({
-  title: {
-    type: String,
-    default: null,
-  },
-  subtitle: {
-    type: String,
-    default: null,
-  },
+  title: String,
+  subtitle: String,
 })
 </script>
 
 <template>
   <section class="root">
-    <h3 class="title">{{ title }}</h3>
-    <p class="subtitle">{{ subtitle }}</p>
+    <h3 v-if="title" class="title">{{ title }}</h3>
+    <p v-if="subtitle" class="subtitle">{{ subtitle }}</p>
     <slot />
   </section>
 </template>

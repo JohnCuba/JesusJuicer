@@ -8,6 +8,7 @@ const model = defineModel()
 
 <style scoped>
 .input {
+  position: relative;
   font-size: 1em;
   width: 100%;
   color: var(--palette-contrast);

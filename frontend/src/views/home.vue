@@ -7,9 +7,9 @@ import UpdateTile from '@/widgets/update.tile.vue'
 
 <template>
   <PageHeader>
-    <TdsTile />
     <WifiTile />
     <UpdateTile />
+    <TdsTile />
   </PageHeader>
 </template>
 
@@ -22,5 +22,8 @@ import UpdateTile from '@/widgets/update.tile.vue'
 :deep(.header__content) {
   display: flex;
   gap: 1rem;
+  flex-flow: wrap-reverse;
+  align-content: end;
+  justify-content: end;
 }
 </style>

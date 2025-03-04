@@ -19,8 +19,7 @@ defineProps({
   display: flex;
   flex-direction: column;
   aspect-ratio: 1;
-  height: 10rem;
-  width: 10rem;
+  flex: 0 calc(50% - 0.5rem);
   padding: 0.6rem;
   color: var(--palette-contrast);
   backdrop-filter: brightness(0.6);

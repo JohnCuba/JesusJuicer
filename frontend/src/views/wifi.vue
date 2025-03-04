@@ -5,7 +5,7 @@ import NetworkApSection from '@/widgets/network-ap.section.vue'
 </script>
 
 <template>
-  <PageHeader with-nav title="Wi-Fi networking" subtitle="Juicer" />
+  <PageHeader with-nav title="wi-fi" subtitle="Jesus juicer" />
   <NetworkApSection />
   <SelfApSection />
 </template>

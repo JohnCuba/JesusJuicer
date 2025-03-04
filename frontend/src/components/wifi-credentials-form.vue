@@ -39,7 +39,7 @@ const hadndleSave = () => {
     <Input placeholder="Password" type="password" name="password" v-model="password" />
     <div class="actions">
       <Button v-if="delitable" type="button" @click="handleDelete" square>
-        <IconClose />
+        <IconClose width="1.5em" />
       </Button>
       <Button type="button" @click="hadndleSave">Save</Button>
     </div>

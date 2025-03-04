@@ -5,7 +5,7 @@ import { useRouter } from 'vue-router'
 defineProps({
   title: {
     type: String,
-    default: 'Juicer',
+    default: 'Jesus juicer',
   },
   subtitle: {
     type: String,
@@ -83,7 +83,6 @@ const menu = computed(() =>
   display: block;
   border: none;
   text-align: start;
-  text-transform: capitalize;
   text-decoration: none;
   cursor: pointer;
   position: relative;
