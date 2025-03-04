@@ -20,7 +20,7 @@ ServerModule::ServerModule() :
 {
 	DefaultHeaders::Instance().addHeader("Access-Control-Allow-Origin", "*");
 	DefaultHeaders::Instance().addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
-	DefaultHeaders::Instance().addHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Custom-Header");
+	DefaultHeaders::Instance().addHeader("Access-Control-Allow-Headers", "Content-Type, Content-Disposition, Authorization, X-Custom-Header");
 	DefaultHeaders::Instance().addHeader("Access-Control-Allow-Private-Network", "true");
 };
 

@@ -187,9 +187,13 @@ paths:
         required: true
         description: ""
         content:
-          application/octet-stream:
+          multipart/form-data:
             schema:
-              type: string
+              type: object
+              fileName:
+                type: string
+                format: binary
+
   /api/update/fs:
     post:
       operationId: uploadFilesystem
@@ -200,9 +204,13 @@ paths:
         required: true
         description: ""
         content:
-          application/octet-stream:
+          multipart/form-data:
             schema:
-              type: string
+              type: object
+              fileName:
+                type: string
+                format: binary
+
       responses:
         "200":
           description: The request was successful, and updating complete.

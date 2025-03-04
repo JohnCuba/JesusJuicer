@@ -4,7 +4,7 @@
 
 UpdaterModule* UpdaterModule::pinstance_{nullptr};
 
-UpdaterModule *UpdaterModule::GetInstance() {
+UpdaterModule* UpdaterModule::GetInstance() {
 	if (pinstance_ == nullptr) {
 		pinstance_ = new UpdaterModule();
 	}
@@ -17,6 +17,7 @@ ArRequestHandlerFunction UpdaterModule::updateRequestHandler() {
 		AsyncWebServerResponse *response = request->beginResponse(200, "text/plain", (Update.hasError()) ? "FAIL" : "OK");
 		response->addHeader("Connection", "close");
 		request->send(response);
+		delay(100);
 		ESP.restart();
 	};
 };
@@ -28,7 +29,7 @@ ArUploadHandlerFunction UpdaterModule::updateUploadHandler(int command) {
 		}
 
 		if (len) {
-			if (!Update.begin(UPDATE_SIZE_UNKNOWN) && !Update.isRunning(), command) {
+			if (!Update.begin(UPDATE_SIZE_UNKNOWN, command) && !Update.isRunning()) {
 				logg.info(Update.errorString());
 			};
 
@@ -60,7 +61,7 @@ void UpdaterModule::registerServerRoutes(const char* fwVersion) {
 	ServerModule* server_module = ServerModule::GetInstance();
 
 	server_module->registerRoute("/api/update/fw", HTTP_GET, [=](AsyncWebServerRequest *request) {
-		request->send_P(200, "text/plain", fwVersion);
+		request->send_P(200, "text/plain", String(fwVersion).c_str());
 	});
 
 	server_module->registerRoute(
