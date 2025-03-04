@@ -21,14 +21,15 @@ defineProps({
 
 <style lang="css" scoped>
 .button {
+  position: relative;
   width: 100%;
   font-size: 1em;
   padding: 15px 12px;
-  text-align: start;
   display: flex;
   align-items: center;
+  text-align: start;
   background-color: var(--palette-contrast);
-  color: var(--palette-main);
+  color: var(--palette-neutral);
   font-weight: 600;
   border: none;
   text-transform: capitalize;
