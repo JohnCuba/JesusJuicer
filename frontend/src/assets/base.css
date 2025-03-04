@@ -7,6 +7,8 @@
 
 body {
   min-height: 100dvh;
+  max-width: 512px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   font-family: Helvetica, sans-serif;
