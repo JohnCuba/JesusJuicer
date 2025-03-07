@@ -1,8 +1,8 @@
 openapi: 3.1.0
 info:
-  title: Juicer
+  title: jesus juicer
   version: 0.0.0
-  description: Api schema of juicer device
+  description: Api schema of jesus juicer device
   x-fiddle-import-file: true
 paths:
   /api:
