@@ -17,13 +17,6 @@ export interface WifiCredentials {
   password?: string
 }
 
-export interface WifiCredentialsEdit {
-  to?: number
-  ssid: string
-  index: number
-  password?: string
-}
-
 export type QueryParamsType = Record<string | number, any>
 export type ResponseFormat = keyof Omit<Body, 'body' | 'bodyUsed'>
 
@@ -247,10 +240,13 @@ export class HttpClient<SecurityDataType = unknown> {
 }
 
 /**
- * @title Juicer
- * @version 0.0.0
+ * @title jesus juicer
+ * @version 0.0.3
+ * @license Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0.html)
+ * @baseUrl http://juicer.local
+ * @contact John Cuba <ekubetsky@gmail.com>
  *
- * Api schema of juicer device
+ * Api schema of jesus juicer device
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
   api = {
@@ -262,7 +258,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request OPTIONS:/api
      */
     preflightRequest: (params: RequestParams = {}) =>
-      this.request<null, any>({
+      this.request<string, string>({
         path: `/api`,
         method: 'OPTIONS',
         ...params,
@@ -277,7 +273,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/api/wifi/ap
      */
     getApCredentials: (params: RequestParams = {}) =>
-      this.request<WifiCredentials, any>({
+      this.request<WifiCredentials, string>({
         path: `/api/wifi/ap`,
         method: 'GET',
         format: 'json',
@@ -293,7 +289,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request PATCH:/api/wifi/ap
      */
     setApCredentials: (data: WifiCredentials, params: RequestParams = {}) =>
-      this.request<string, any>({
+      this.request<string, string>({
         path: `/api/wifi/ap`,
         method: 'PATCH',
         body: data,
@@ -316,7 +312,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
           mode: WifiMode
           rssi: number
         },
-        any
+        string
       >({
         path: `/api/wifi/state`,
         method: 'GET',
@@ -333,7 +329,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/api/wifi/network
      */
     getNetworkApCredentials: (params: RequestParams = {}) =>
-      this.request<WifiCredentials, any>({
+      this.request<WifiCredentials, string>({
         path: `/api/wifi/network`,
         method: 'GET',
         format: 'json',
@@ -349,7 +345,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request PATCH:/api/wifi/network
      */
     setNetworkApCredentials: (data: WifiCredentials, params: RequestParams = {}) =>
-      this.request<string, any>({
+      this.request<string, string>({
         path: `/api/wifi/network`,
         method: 'PATCH',
         body: data,
@@ -366,7 +362,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request DELETE:/api/wifi/network
      */
     delNetworkApCredentials: (params: RequestParams = {}) =>
-      this.request<string, any>({
+      this.request<string, string>({
         path: `/api/wifi/network`,
         method: 'DELETE',
         ...params,
@@ -381,7 +377,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/api/tds
      */
     getTdsSensorValue: (params: RequestParams = {}) =>
-      this.request<string, any>({
+      this.request<string, string>({
         path: `/api/tds`,
         method: 'GET',
         ...params,
@@ -396,7 +392,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/api/update/fw
      */
     getFirmwareVersion: (params: RequestParams = {}) =>
-      this.request<string, any>({
+      this.request<string, string>({
         path: `/api/update/fw`,
         method: 'GET',
         ...params,
@@ -410,8 +406,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @summary upload firmware
      * @request POST:/api/update/fw
      */
-    uploadFirmware: (data: object, params: RequestParams = {}) =>
-      this.request<string, any>({
+    uploadFirmware: (
+      data: {
+        /** @format binary */
+        file?: File
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<string, string>({
         path: `/api/update/fw`,
         method: 'POST',
         body: data,
@@ -427,8 +429,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @summary upload filesystem
      * @request POST:/api/update/fs
      */
-    uploadFilesystem: (data: object, params: RequestParams = {}) =>
-      this.request<string, any>({
+    uploadFilesystem: (
+      data: {
+        /** @format binary */
+        file?: File
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<string, string>({
         path: `/api/update/fs`,
         method: 'POST',
         body: data,

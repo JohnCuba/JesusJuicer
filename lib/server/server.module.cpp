@@ -4,6 +4,7 @@
 #include "LittleFS.h"
 #include "server.module.hpp"
 #include "tds.module.hpp"
+#include "api_config.hpp"
 
 ServerModule* ServerModule::pinstance_{nullptr};
 
@@ -44,7 +45,7 @@ void ServerModule::onSetup() {
 	});
 
 	server.on("/api/*", HTTP_OPTIONS, [](AsyncWebServerRequest *request) {
-		request->send_P(200, "text/plain", "ok");
+		request->send_P(200, RES_TYPE_TEXT, RES_BODY_OK);
 	});
 
 	server.begin();

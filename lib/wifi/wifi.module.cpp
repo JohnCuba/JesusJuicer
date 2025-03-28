@@ -5,6 +5,7 @@
 #include "wifi.module.hpp"
 #include "wifi_credentials.hpp"
 #include "server.module.hpp"
+#include "api_config.hpp"
 
 const long interval = 5000;
 const String credsFilePath = "/private/credentials.json";
@@ -73,7 +74,7 @@ void WifiModule::registerServerRoutes() {
 		root["ip"].set(mode == "1" ? WiFi.localIP().toString() : WiFi.softAPIP().toString());
 		root["rssi"].set(WiFi.RSSI());
 
-		AsyncWebServerResponse *response = request->beginResponse(200, "application/json", responseBody.as<String>());
+		AsyncWebServerResponse *response = request->beginResponse(200, RES_TYPE_JSON, responseBody.as<String>());
 		request->send(response);
 	});
 
@@ -86,13 +87,13 @@ void WifiModule::registerServerRoutes() {
 		root["ssid"].set(creds.ssid);
 		root["password"].set(creds.password);
 
-		AsyncWebServerResponse *response = request->beginResponse(200, "application/json", responseBody.as<String>());
+		AsyncWebServerResponse *response = request->beginResponse(200, RES_TYPE_JSON, responseBody.as<String>());
 		request->send(response);
 	});
 
 	server_module->registerRoute("/api/wifi/ap", HTTP_PATCH, [=](AsyncWebServerRequest *request) {
 		if (!request->hasParam("ssid", true)) {
-			return request->send_P(422, "text/plain", "provide ssid");
+			return request->send_P(422, RES_TYPE_TEXT, "provide ssid");
 		}
 
 		String ssid = request->getParam("ssid", true)->value();
@@ -102,7 +103,7 @@ void WifiModule::registerServerRoutes() {
 
 		setAPCredentials(selfAPStoreKey, wifiCredentials{ssid, password});
 
-		request->send_P(200, "text/plain", "saved");
+		request->send_P(200, RES_TYPE_TEXT, RES_BODY_OK);
 	});
 
 	server_module->registerRoute("/api/wifi/network", HTTP_GET, [=](AsyncWebServerRequest *request) {
@@ -114,13 +115,13 @@ void WifiModule::registerServerRoutes() {
 		root["ssid"].set(creds.ssid);
 		root["password"].set(creds.password);
 
-		AsyncWebServerResponse *response = request->beginResponse(200, "application/json", responseBody.as<String>());
+		AsyncWebServerResponse *response = request->beginResponse(200, RES_TYPE_JSON, responseBody.as<String>());
 		request->send(response);
 	});
 
 	server_module->registerRoute("/api/wifi/network", HTTP_PATCH, [=](AsyncWebServerRequest *request) {
 		if (!request->hasParam("ssid", true)) {
-			return request->send_P(422, "text/plain", "provide ssid");
+			return request->send_P(422, RES_TYPE_TEXT, "provide ssid");
 		}
 
 		String ssid = request->getParam("ssid", true)->value();
@@ -131,13 +132,13 @@ void WifiModule::registerServerRoutes() {
 
 		setAPCredentials(networkAPStoreKey, wifiCredentials{ssid, password});
 
-		request->send_P(200, "text/plain", "saved");
+		request->send_P(200, RES_TYPE_TEXT, RES_BODY_OK);
 	});
 
 	server_module->registerRoute("/api/wifi/network", HTTP_DELETE, [=](AsyncWebServerRequest *request) {
 		deleteAPCredentials(networkAPStoreKey);
 
-		request->send_P(200, "text/plain", "deleted");
+		request->send_P(200, RES_TYPE_TEXT, RES_BODY_OK);
 	});
 }
 

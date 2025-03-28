@@ -1,31 +1,36 @@
 openapi: 3.1.0
+servers:
+  - url: http://juicer.local
 info:
   title: jesus juicer
-  version: 0.0.0
+  version: 0.0.3
   description: Api schema of jesus juicer device
-  x-fiddle-import-file: true
+  contact:
+    name: John Cuba
+    email: ekubetsky@gmail.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
 paths:
   /api:
     options:
+      security: []
       summary: preflight request
-      responses:
-        "200":
-          content:
-            text/plain:
-              schema:
-                type: "null"
-                title: PreflightRequestOk
-          description:
-            The request was successful, and the server has returned the
-            requested resource in the response body.
-      parameters: []
       operationId: preflightRequest
+      responses:
+        200:
+          $ref: "#/components/responses/Ok"
+        400:
+          $ref: "#/components/responses/Bad"
   /api/wifi/ap:
     get:
+      security: []
       tags:
         - ap
         - wifi
       summary: get ap credentials
+      parameters: []
+      operationId: getApCredentials
       responses:
         "200":
           content:
@@ -35,23 +40,14 @@ paths:
           description:
             The request was successful, and the server has returned the
             requested resource in the response body.
-      parameters: []
-      operationId: getApCredentials
+        400:
+          $ref: "#/components/responses/Bad"
     patch:
+      security: []
       tags:
         - ap
         - wifi
       summary: set ap credentials
-      responses:
-        "200":
-          content:
-            text/plain:
-              schema:
-                type: string
-                title: SetApCredentialsOk
-          description:
-            The request was successful, and the server has returned the
-            requested resource in the response body.
       operationId: setApCredentials
       requestBody:
         content:
@@ -60,8 +56,14 @@ paths:
               $ref: "#/components/schemas/wifiCredentials"
         required: true
         description: ""
+      responses:
+        200:
+          $ref: "#/components/responses/Ok"
+        400:
+          $ref: "#/components/responses/Bad"
   /api/wifi/state:
     get:
+      security: []
       tags:
         - wifi
       summary: get wifi state
@@ -86,10 +88,13 @@ paths:
           description:
             The request was successful, and the server has returned the
             requested resource in the response body.
+        400:
+          $ref: "#/components/responses/Bad"
       parameters: []
       operationId: getWifiState
   /api/wifi/network:
     get:
+      security: []
       tags:
         - network
         - wifi
@@ -103,22 +108,15 @@ paths:
           description:
             The request was successful, and the server has returned the
             requested resource in the response body.
+        400:
+          $ref: "#/components/responses/Bad"
       operationId: getNetworkApCredentials
     patch:
+      security: []
       tags:
         - network
         - wifi
       summary: set network ap credentials
-      responses:
-        "200":
-          content:
-            text/plain:
-              schema:
-                type: string
-                title: SetNetworkApCredentialsOk
-          description:
-            The request was successful, and the server has returned the
-            requested resource in the response body.
       operationId: setNetworkApCredentials
       requestBody:
         content:
@@ -127,23 +125,25 @@ paths:
               $ref: "#/components/schemas/wifiCredentials"
         required: true
         description: ""
+      responses:
+        200:
+          $ref: "#/components/responses/Ok"
+        400:
+          $ref: "#/components/responses/Bad"
     delete:
+      security: []
       tags:
         - network
       summary: del network ap credentials
-      responses:
-        "200":
-          content:
-            text/plain:
-              schema:
-                type: string
-                title: DelNetworkApCredentialsOk
-          description:
-            The request was successful, and the server has returned the
-            requested resource in the response body.
       operationId: delNetworkApCredentials
+      responses:
+        200:
+          $ref: "#/components/responses/Ok"
+        400:
+          $ref: "#/components/responses/Bad"
   /api/tds:
     get:
+      security: []
       operationId: getTdsSensorValue
       tags:
         - tds
@@ -158,8 +158,11 @@ paths:
               schema:
                 type: string
                 title: GetTdsSensorValueOk
+        400:
+          $ref: "#/components/responses/Bad"
   /api/update/fw:
     get:
+      security: []
       operationId: getFirmwareVersion
       tags:
         - update
@@ -171,18 +174,14 @@ paths:
             text/plain:
               schema:
                 type: string
+        400:
+          $ref: "#/components/responses/Bad"
     post:
+      security: []
       operationId: uploadFirmware
       tags:
         - update
       summary: upload firmware
-      responses:
-        "200":
-          description: The request was successful, and updating complete.
-          content:
-            text/plain:
-              schema:
-                type: string
       requestBody:
         required: true
         description: ""
@@ -190,12 +189,19 @@ paths:
           multipart/form-data:
             schema:
               type: object
-              fileName:
-                type: string
-                format: binary
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        200:
+          $ref: "#/components/responses/Ok"
+        400:
+          $ref: "#/components/responses/Bad"
 
   /api/update/fs:
     post:
+      security: []
       operationId: uploadFilesystem
       tags:
         - update
@@ -207,17 +213,16 @@ paths:
           multipart/form-data:
             schema:
               type: object
-              fileName:
-                type: string
-                format: binary
+              properties:
+                file:
+                  type: string
+                  format: binary
 
       responses:
-        "200":
-          description: The request was successful, and updating complete.
-          content:
-            text/plain:
-              schema:
-                type: string
+        200:
+          $ref: "#/components/responses/Ok"
+        400:
+          $ref: "#/components/responses/Bad"
 components:
   schemas:
     wifiMode:
@@ -242,74 +247,29 @@ components:
       description:
         A simplified representation of a wifiCredentials, typically used in
         list views.
-    wifiCredentialsEdit:
-      type: object
-      required:
-        - ssid
-        - index
-      properties:
-        to:
-          type: number
-        ssid:
-          type: string
-        index:
-          type: number
-        password:
-          type: string
-      description: ""
-      x-fiddle-dto-info:
-        baseSchemaName: wifiCredentials
   responses:
     Ok:
+      description: Successful operation.
       content:
-        application/json:
+        text/plain:
           schema:
-            type: object
-            required:
-              - data
-            properties:
-              data:
-                type: object
-      description: The request was successful, and the server has returned the
-        requested resource in the response body.
-    NotFound:
+            type: string
+            example: "ok"
+    Bad:
+      description: Unsuccessful operation.
       content:
-        application/json:
+        text/plain:
           schema:
-            type: object
-            required:
-              - message
-            properties:
-              message:
-                type: string
-      description:
-        The server cannot find the requested resource. The endpoint may be
-        invalid or the resource may no longer exist.
-    BadRequest:
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-              - message
-            properties:
-              errors:
-                type: array
-                items:
-                  type: object
-                  required:
-                    - message
-                  properties:
-                    message:
-                      type: string
-              message:
-                type: string
-      description:
-        The server could not understand the request due to invalid syntax.
-        The client should modify the request and try again.
+            type: string
+            example: "bad"
 tags:
   - name: wifi
+    description: Manage wifi connection, by self AP or client mode
   - name: ap
+    description: Manage config of self AP
   - name: network
+    description: Manage config of wifi client mode
   - name: tds
+    description: Manage TDS meter config
   - name: update
+    description: Upload and flush firmware or data

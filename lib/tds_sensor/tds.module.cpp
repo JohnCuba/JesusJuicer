@@ -1,6 +1,7 @@
 #include <ESPAsyncWebServer.h>
 #include "server.module.hpp"
 #include "tds.module.hpp"
+#include "api_config.hpp"
 
 int getMedianNum(int bArray[], int iFilterLen){
   int bTab[iFilterLen];
@@ -78,11 +79,11 @@ void TDSModule::registerServerRoutes() {
 	ServerModule* server_module = ServerModule::GetInstance();
 
   server_module->registerRoute("/api/tds", HTTP_GET, [=](AsyncWebServerRequest *request) {
-		request->send_P(200, "text/plain", String(getValue()).c_str());
+		request->send_P(200, RES_TYPE_TEXT, String(getValue()).c_str());
 	});
 
 	server_module->registerRoute("/api/tds", HTTP_OPTIONS, [=](AsyncWebServerRequest *request) {
-		request->send_P(200, "text/plain", "ok");
+		request->send_P(200, RES_TYPE_TEXT, RES_BODY_OK);
 	});
 }
 

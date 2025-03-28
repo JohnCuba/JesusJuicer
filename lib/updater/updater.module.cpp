@@ -1,6 +1,7 @@
 #include <Update.h>
 #include "server.module.hpp"
 #include "updater.module.hpp"
+#include "api_config.hpp"
 
 UpdaterModule* UpdaterModule::pinstance_{nullptr};
 
@@ -14,7 +15,7 @@ UpdaterModule* UpdaterModule::GetInstance() {
 
 ArRequestHandlerFunction UpdaterModule::updateRequestHandler() {
 	return [=](AsyncWebServerRequest *request) {
-		AsyncWebServerResponse *response = request->beginResponse(200, "text/plain", (Update.hasError()) ? "FAIL" : "OK");
+		AsyncWebServerResponse *response = request->beginResponse(200, RES_TYPE_TEXT, (Update.hasError()) ? RES_BODY_BAD : RES_BODY_OK);
 		response->addHeader("Connection", "close");
 		request->send(response);
 		delay(100);
@@ -38,7 +39,7 @@ ArUploadHandlerFunction UpdaterModule::updateUploadHandler(int command) {
 			} else {
 				logg.info(Update.errorString());
 				Update.abort();
-				request->send_P(500, "text/plain", Update.errorString());
+				request->send_P(500, RES_TYPE_TEXT, Update.errorString());
 			}
 		}
 
@@ -61,7 +62,7 @@ void UpdaterModule::registerServerRoutes(const char* fwVersion) {
 	ServerModule* server_module = ServerModule::GetInstance();
 
 	server_module->registerRoute("/api/update/fw", HTTP_GET, [=](AsyncWebServerRequest *request) {
-		request->send_P(200, "text/plain", String(fwVersion).c_str());
+		request->send_P(200, RES_TYPE_TEXT, String(fwVersion).c_str());
 	});
 
 	server_module->registerRoute(
