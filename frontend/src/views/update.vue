@@ -4,6 +4,8 @@ import UploadUpdateSection from '@/widgets/upload_update.section.vue'
 </script>
 
 <template>
-  <PageHeader with-nav title="update" subtitle="Jesus juicer" />
-  <UploadUpdateSection />
+  <PageHeader title="/update" />
+  <div class="flex-auto flex flex-col gap-4 p-4 rounded-xl rounded-b-none bg-base-100">
+    <UploadUpdateSection />
+  </div>
 </template>

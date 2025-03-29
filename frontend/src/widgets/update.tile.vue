@@ -11,30 +11,13 @@ const { data: fwVersion } = useGetFwVersion()
 
 <template>
   <HomeTile url-path="/update" label="Update">
-    <span v-if="fwVersion === fsVersion">{{ fwVersion }}</span>
-    <template v-else>
-      <span class="info"> fw: {{ fwVersion }}</span>
-      <span class="info">fs: {{ fsVersion }}</span>
-    </template>
-    <div class="icon">
-      <IconUpdate />
+    <div class="flex flex-auto flex-col justify-end">
+      <span v-if="fwVersion === fsVersion" class="font-mono text-xl">{{ fwVersion }}</span>
+      <template v-else>
+        <span class="font-mono text-xl"> fw: {{ fwVersion }}</span>
+        <span class="font-mono text-xl">fs: {{ fsVersion }}</span>
+      </template>
     </div>
+    <IconUpdate class="absolute top-0 left-1/2 w-full h-full opacity-40" />
   </HomeTile>
 </template>
-
-<style scoped>
-.info {
-  display: inline-block;
-  z-index: 1;
-  font-size: large;
-}
-
-.icon {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 100%;
-  height: 100%;
-  opacity: 0.4;
-}
-</style>
