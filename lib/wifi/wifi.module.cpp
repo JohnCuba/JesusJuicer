@@ -8,7 +8,6 @@
 #include "api_config.hpp"
 
 const long interval = 5000;
-const String credsFilePath = "/private/credentials.json";
 
 const wifiCredentials defaultSelfAP = wifiCredentials{
 	ssid: "juicer",
