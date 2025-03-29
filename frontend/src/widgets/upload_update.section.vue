@@ -8,16 +8,21 @@ const { upload: uploadFs, progress: fsUploadProgress } = useUploadFs()
 </script>
 
 <template>
-  <ContentSection title="Update by files" class="section">
-    <InputFile accept=".bin" placeholder="system" @send="uploadFw" :progress="fwUploadProgress" />
-    <InputFile accept=".bin" placeholder="flash" @send="uploadFs" :progress="fsUploadProgress" />
+  <ContentSection title="Update by files">
+    <div class="flex flex-col gap-4">
+      <InputFile
+        accept=".bin"
+        placeholder="Pick system"
+        class="join-item"
+        @send="uploadFw"
+        :progress="fwUploadProgress"
+      />
+      <InputFile
+        accept=".bin"
+        placeholder="Pick flash"
+        @send="uploadFs"
+        :progress="fsUploadProgress"
+      />
+    </div>
   </ContentSection>
 </template>
-
-<style scoped>
-.section {
-  display: flex;
-  flex-direction: column;
-  row-gap: 1em;
-}
-</style>

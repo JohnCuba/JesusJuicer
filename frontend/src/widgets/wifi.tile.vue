@@ -15,30 +15,18 @@ const { data: wifiState } = useGetWifiState()
 
 <template>
   <HomeTile url-path="/wifi" label="Wi-Fi">
-    <span class="info">{{ wifiModes[wifiState?.mode || '0'] }}</span>
-    <span class="info">{{ wifiState?.ip }}</span>
-    <div class="icon" :class="[wifiSignalQuality[RSSItoWifiSignalQualityIndex(wifiState?.rssi)]]">
-      <IconWifi />
+    <div class="flex-auto flex flex-col justify-end">
+      <span class="font-mono text-xl">{{ wifiModes[wifiState?.mode || '0'] }}</span>
+      <span class="font-mono text-xl">{{ wifiState?.ip }}</span>
     </div>
+    <IconWifi
+      class="absolute top-0 left-1/2 w-full h-full opacity-40 icon"
+      :class="[wifiSignalQuality[RSSItoWifiSignalQualityIndex(wifiState?.rssi)]]"
+    />
   </HomeTile>
 </template>
 
 <style scoped>
-.info {
-  display: inline-block;
-  z-index: 1;
-  font-size: large;
-}
-
-.icon {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 100%;
-  height: 100%;
-  opacity: 0.4;
-}
-
 .icon > :deep(svg) > * {
   transition: fill 1s;
 }

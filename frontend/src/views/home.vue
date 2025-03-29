@@ -1,29 +1,16 @@
 <script setup lang="ts">
-import PageHeader from '@/components/page-header.vue'
-import WifiTile from '@/widgets/wifi.tile.vue'
 import TdsTile from '@/widgets/tds.tile.vue'
+import WifiTile from '@/widgets/wifi.tile.vue'
 import UpdateTile from '@/widgets/update.tile.vue'
 </script>
 
 <template>
-  <PageHeader>
-    <WifiTile />
-    <UpdateTile />
-    <TdsTile />
-  </PageHeader>
+  <main class="flex-auto p-4 flex flex-col gap-4 bg-base-100">
+    <div class="flex-auto grid content-end grid-flow-row-dense grid-cols-2 grid-rows-4 gap-4">
+      <TdsTile class="col-span-2" />
+      <WifiTile />
+      <UpdateTile />
+    </div>
+    <h1 class="flex-none font-sans text-4xl">Jesus Juicer</h1>
+  </main>
 </template>
-
-<style scoped>
-.header {
-  min-height: 100dvh;
-  transition: min-height 0.1s;
-}
-
-:deep(.header__content) {
-  display: flex;
-  gap: 1rem;
-  flex-flow: wrap-reverse;
-  align-content: end;
-  justify-content: end;
-}
-</style>

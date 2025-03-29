@@ -1,7 +1,7 @@
 <script lang="ts" setup>
+import { defineAsyncComponent } from 'vue'
 import { useGetTds } from '@/data/tds'
 import HomeTile from '@/components/home-tile.vue'
-import { defineAsyncComponent } from 'vue'
 
 const IconPpm = defineAsyncComponent(() => import('@/assets/icons/ppm.svg'))
 
@@ -10,26 +10,9 @@ const { data: tdsData } = useGetTds()
 
 <template>
   <HomeTile label="TDS">
-    <span class="info">{{ tdsData }} ppm</span>
-    <div class="icon">
-      <IconPpm />
+    <div class="flex flex-auto flex-col justify-end">
+      <span class="font-mono text-xl">{{ tdsData }} ppm</span>
     </div>
+    <IconPpm class="absolute top-0 left-1/3 w-full h-full opacity-40" />
   </HomeTile>
 </template>
-
-<style lang="css" scoped>
-.info {
-  display: inline-block;
-  z-index: 1;
-  font-size: large;
-}
-
-.icon {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 100%;
-  height: 100%;
-  opacity: 0.4;
-}
-</style>
