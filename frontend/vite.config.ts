@@ -5,6 +5,7 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 import gzipPlugin from 'rollup-plugin-gzip'
 import cleanPlugin from 'rollup-plugin-delete'
 import svgLoader from 'vite-svg-loader'
+import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -12,6 +13,7 @@ export default defineConfig({
     vue(),
     vueDevTools(),
     svgLoader(),
+    tailwindcss(),
     gzipPlugin({
       customCompression: (content: string | Buffer) => Buffer.from(Bun.gzipSync(content)),
     }),
