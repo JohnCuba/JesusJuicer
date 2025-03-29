@@ -13,7 +13,7 @@
 @plugin "daisyui" {
   themes:
     lemonade --default,
-    forest --dark;
+    night --prefersdark;
 }
 @plugin "daisyui/theme" {
   name: 'lemonade';
