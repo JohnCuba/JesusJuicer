@@ -20,8 +20,8 @@ const handleSave = (data: WifiCredentials) => {
 <template>
   <ContentSection title="Network" subtitle="Edit credentials of access point to connect">
     <WifiCredentialsForm
-      v-if="!isLoading"
       delitable
+      :is-loading="isLoading"
       :default-values="networkCreds"
       @save="handleSave"
       @delete="handleDelete"

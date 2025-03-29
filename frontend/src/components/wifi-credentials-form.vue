@@ -1,17 +1,15 @@
 <script setup lang="ts">
-import { defineAsyncComponent, ref, type PropType } from 'vue'
+import { defineAsyncComponent, ref, watch, type PropType } from 'vue'
 import type { WifiCredentials } from '@/data/config_api'
 const IconClose = defineAsyncComponent(() => import('@/assets/icons/close.svg'))
 
 const props = defineProps({
-  delitable: {
-    type: Boolean,
-    default: false,
-  },
+  delitable: Boolean,
   defaultValues: {
     type: Object as PropType<WifiCredentials>,
     default: () => ({}),
   },
+  isLoading: Boolean,
 })
 
 const ssid = ref(props.defaultValues.ssid)
@@ -29,16 +27,38 @@ const handleDelete = () => {
 const hadndleSave = () => {
   emit('save', { ssid: ssid.value, password: password.value })
 }
+
+watch(
+  () => props.isLoading,
+  () => {
+    ssid.value = props.defaultValues.ssid
+    password.value = props.defaultValues.password || ''
+  },
+)
 </script>
 
 <template>
   <form class="flex flex-col gap-4" @click.stop="">
-    <input placeholder="SSID" type="text" name="ssid" class="input w-full" v-model="ssid" />
+    <input
+      placeholder="SSID"
+      type="text"
+      name="ssid"
+      class="input w-full"
+      :class="{
+        ['skeleton rounded-field']: isLoading,
+      }"
+      :disabled="isLoading"
+      v-model="ssid"
+    />
     <input
       placeholder="Password"
       type="password"
       name="password"
       class="input w-full"
+      :class="{
+        ['skeleton rounded-field']: isLoading,
+      }"
+      :disabled="isLoading"
       v-model="password"
     />
     <div class="card-actions flex justify-end">
