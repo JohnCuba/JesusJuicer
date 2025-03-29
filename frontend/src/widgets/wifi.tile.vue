@@ -27,23 +27,23 @@ const { data: wifiState } = useGetWifiState()
 </template>
 
 <style scoped>
-.icon > :deep(svg) > * {
+.icon > * {
   transition: fill 1s;
 }
 
-.very_low > :deep(svg) > *:is(.very_low) {
-  fill: var(--palette-danger);
+.very_low > *:is(.very_low) {
+  fill: var(--color-error);
 }
 
-.low > :deep(svg) > *:is(.very_low, .low) {
-  fill: var(--palette-warning);
+.low > *:is(.very_low, .low) {
+  fill: var(--color-warning);
 }
 
-.good > :deep(svg) > *:is(.very_low, .low, .good) {
-  fill: var(--palette-contrast);
+.good > *:is(.very_low, .low, .good) {
+  fill: var(--color-success);
 }
 
-.very_good > :deep(svg) > *:is(.very_low, .low, .good, .very_good) {
-  fill: var(--palette-contrast);
+.very_good > *:is(.very_low, .low, .good, .very_good) {
+  fill: var(--color-success);
 }
 </style>
