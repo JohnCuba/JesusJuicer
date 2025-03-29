@@ -17,8 +17,10 @@ jobs:
       - name: commit version bump
         uses: EndBug/add-and-commit@v9
         with:
-          author_name: release job
-          author_email: release@job.com
+          message: Bump version to ${{ github.event.release.name }}
+          committer_name: GitHub Actions
+          committer_email: actions@github.com
+          new_branch: main
 
       - name: build frontend
         uses: oven-sh/setup-bun@v2
