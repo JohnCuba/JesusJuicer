@@ -10,6 +10,16 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: bump version
+        run: |
+          bash ./.github/workflows/bash/bump_version.sh "${{ github.event.release.name }}"
+
+      - name: commit version bump
+        uses: EndBug/add-and-commit@v9
+        with:
+          author_name: release job
+          author_email: release@job.com
+
       - name: build frontend
         uses: oven-sh/setup-bun@v2
         with:
