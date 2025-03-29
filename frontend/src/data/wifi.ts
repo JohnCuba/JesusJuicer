@@ -23,7 +23,7 @@ export const useGetNetworkAP = () =>
   useSWRV('/wifi/network', apiClient.api.getNetworkApCredentials, { refreshInterval: 5000 })
 
 export const useSetNetworkAP = () => {
-  const { mutate } = useSWRV('/wifi/network', null)
+  const { mutate } = useGetNetworkAP()
 
   return async (...data: Parameters<typeof apiClient.api.setNetworkApCredentials>) => {
     await apiClient.api.setNetworkApCredentials(...data)
@@ -32,7 +32,7 @@ export const useSetNetworkAP = () => {
 }
 
 export const useDelNetworkAP = () => {
-  const { mutate } = useSWRV('/wifi/network', null)
+  const { mutate } = useGetNetworkAP()
 
   return async (...data: Parameters<typeof apiClient.api.delNetworkApCredentials>) => {
     await apiClient.api.delNetworkApCredentials(...data)
@@ -43,7 +43,7 @@ export const useDelNetworkAP = () => {
 export const useGetSelfAp = () => useSWRV('/wifi/ap', apiClient.api.getApCredentials)
 
 export const useSetSelfAp = () => {
-  const { mutate } = useSWRV('/wifi/ap', null)
+  const { mutate } = useGetSelfAp()
 
   return async (...data: Parameters<typeof apiClient.api.setApCredentials>) => {
     await apiClient.api.setApCredentials(...data)
