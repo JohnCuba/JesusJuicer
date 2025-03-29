@@ -15,6 +15,6 @@ const handleSave = (creds: WifiCredentials) => {
 
 <template>
   <ContentSection title="Self" subtitle="Edit credentials of self access point">
-    <WifiCredentialsForm v-if="!isLoading" :default-values="data" @save="handleSave" />
+    <WifiCredentialsForm :default-values="data" :is-loading="isLoading" @save="handleSave" />
   </ContentSection>
 </template>
