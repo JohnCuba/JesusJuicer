@@ -50,4 +50,4 @@ jobs:
       - name: upload assets to release
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: gh release upload ${{ github.event.release.name }} .pio/build/esp32doit-devkit-v1/firmware.elf .pio/build/esp32doit-devkit-v1/littlefs.bin
+        run: gh release upload ${{ github.event.release.name }} .pio/build/esp32doit-devkit-v1/firmware.bin .pio/build/esp32doit-devkit-v1/littlefs.bin
