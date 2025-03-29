@@ -33,6 +33,10 @@ export default defineConfig({
   build: {
     outDir: '../data/public/',
     emptyOutDir: true,
-    rollupOptions: {},
+    rollupOptions: {
+      output: {
+        chunkFileNames: (chunkInfo) => `assets/${chunkInfo.name.split('.')[0]}-[hash].js`,
+      },
+    },
   },
 })
