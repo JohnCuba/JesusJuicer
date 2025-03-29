@@ -6,7 +6,7 @@
 #include "tds.module.hpp"
 #include "updater.module.hpp"
 
-#define FIRMWARE_VERSION "0.0.2"
+#define FIRMWARE_VERSION "0.0.4"
 
 // Modules
 WifiModule* wifi_module = WifiModule::GetInstance();
