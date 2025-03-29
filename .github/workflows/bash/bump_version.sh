@@ -11,8 +11,8 @@ fs_new_version="\"version\": \"$new_version\""
 
 
 # Replace using sed -i on the files.
-sed -E -i '' "s/$fw_regex/$(echo "$new_version")/g" "$fw_file"
-sed -E -i '' "s/$fs_regex/$(echo "$fs_new_version")/g" "$fs_file"
+sed -E -i "s/$fw_regex/$(echo "$new_version")/g" "$fw_file"
+sed -E -i "s/$fs_regex/$(echo "$fs_new_version")/g" "$fs_file"
 
 # Check if the sed commands was successful
 if [ $? -eq 0 ]; then
