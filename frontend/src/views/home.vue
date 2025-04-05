@@ -2,6 +2,7 @@
 import TdsTile from '@/widgets/tds.tile.vue'
 import WifiTile from '@/widgets/wifi.tile.vue'
 import UpdateTile from '@/widgets/update.tile.vue'
+import iconThemeControl from '@/components/icon-theme-control.vue'
 </script>
 
 <template>
@@ -11,6 +12,9 @@ import UpdateTile from '@/widgets/update.tile.vue'
       <WifiTile />
       <UpdateTile />
     </div>
-    <h1 class="flex-none font-sans text-4xl">Jesus Juicer</h1>
+    <div class="flex justify-between align-center">
+      <h1 class="flex-none font-sans text-4xl select-none">Jesus Juicer</h1>
+      <iconThemeControl />
+    </div>
   </main>
 </template>

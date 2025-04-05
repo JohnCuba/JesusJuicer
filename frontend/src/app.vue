@@ -1,3 +1,9 @@
+<script setup lang="ts">
+import { useColorThemeWatcher } from './config/theme'
+
+useColorThemeWatcher()
+</script>
+
 <template>
   <div class="bg-neutral">
     <div class="min-h-dvh max-w-lg mx-auto flex flex-col">
@@ -13,7 +19,7 @@
 @plugin "daisyui" {
   themes:
     lemonade --default,
-    night --prefersdark;
+    forest --prefersdark;
 }
 @plugin "daisyui/theme" {
   name: 'lemonade';
