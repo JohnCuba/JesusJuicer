@@ -16,7 +16,7 @@ export const useUploadFile = ({ url = '/' }: useUploadFileArgs) => {
     }
 
     xhr.upload.onprogress = (ev) => {
-      progress.value = ev.loaded / ev.total
+      progress.value = Math.trunc((ev.loaded / ev.total) * 100)
     }
 
     const formData = new FormData()
