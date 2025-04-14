@@ -39,7 +39,7 @@ ArUploadHandlerFunction UpdaterModule::updateUploadHandler(int command) {
 			} else {
 				logg.info(Update.errorString());
 				Update.abort();
-				request->send_P(500, RES_TYPE_TEXT, Update.errorString());
+				request->send(500, RES_TYPE_TEXT, Update.errorString());
 			}
 		}
 
@@ -62,7 +62,7 @@ void UpdaterModule::registerServerRoutes(const char* fwVersion) {
 	ServerModule* server_module = ServerModule::GetInstance();
 
 	server_module->registerRoute("/api/update/fw", HTTP_GET, [=](AsyncWebServerRequest *request) {
-		request->send_P(200, RES_TYPE_TEXT, String(fwVersion).c_str());
+		request->send(200, RES_TYPE_TEXT, String(fwVersion).c_str());
 	});
 
 	server_module->registerRoute(

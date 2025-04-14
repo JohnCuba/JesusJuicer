@@ -45,7 +45,7 @@ void ServerModule::onSetup() {
 	});
 
 	server.on("/api/*", HTTP_OPTIONS, [](AsyncWebServerRequest *request) {
-		request->send_P(200, RES_TYPE_TEXT, RES_BODY_OK);
+		request->send(200, RES_TYPE_TEXT, RES_BODY_OK);
 	});
 
 	server.begin();

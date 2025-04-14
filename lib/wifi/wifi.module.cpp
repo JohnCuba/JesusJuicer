@@ -92,7 +92,7 @@ void WifiModule::registerServerRoutes() {
 
 	server_module->registerRoute("/api/wifi/ap", HTTP_PATCH, [=](AsyncWebServerRequest *request) {
 		if (!request->hasParam("ssid", true)) {
-			return request->send_P(422, RES_TYPE_TEXT, "provide ssid");
+			return request->send(422, RES_TYPE_TEXT, "provide ssid");
 		}
 
 		String ssid = request->getParam("ssid", true)->value();
@@ -102,7 +102,7 @@ void WifiModule::registerServerRoutes() {
 
 		setAPCredentials(selfAPStoreKey, wifiCredentials{ssid, password});
 
-		request->send_P(200, RES_TYPE_TEXT, RES_BODY_OK);
+		request->send(200, RES_TYPE_TEXT, RES_BODY_OK);
 	});
 
 	server_module->registerRoute("/api/wifi/network", HTTP_GET, [=](AsyncWebServerRequest *request) {
@@ -120,7 +120,7 @@ void WifiModule::registerServerRoutes() {
 
 	server_module->registerRoute("/api/wifi/network", HTTP_PATCH, [=](AsyncWebServerRequest *request) {
 		if (!request->hasParam("ssid", true)) {
-			return request->send_P(422, RES_TYPE_TEXT, "provide ssid");
+			return request->send(422, RES_TYPE_TEXT, "provide ssid");
 		}
 
 		String ssid = request->getParam("ssid", true)->value();
@@ -131,13 +131,13 @@ void WifiModule::registerServerRoutes() {
 
 		setAPCredentials(networkAPStoreKey, wifiCredentials{ssid, password});
 
-		request->send_P(200, RES_TYPE_TEXT, RES_BODY_OK);
+		request->send(200, RES_TYPE_TEXT, RES_BODY_OK);
 	});
 
 	server_module->registerRoute("/api/wifi/network", HTTP_DELETE, [=](AsyncWebServerRequest *request) {
 		deleteAPCredentials(networkAPStoreKey);
 
-		request->send_P(200, RES_TYPE_TEXT, RES_BODY_OK);
+		request->send(200, RES_TYPE_TEXT, RES_BODY_OK);
 	});
 }
 
