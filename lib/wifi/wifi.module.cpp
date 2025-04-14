@@ -19,16 +19,16 @@ const char networkAPStoreKey[11] = "network-ap";
 
 const char WifiModule::loggTag_[5] = "WIFI";
 
-WifiModule *WifiModule::pinstance_{nullptr};
+WifiModule *WifiModule::instance_{nullptr};
 
 WifiModule *WifiModule::GetInstance()
 {
-	if (pinstance_ == nullptr)
+	if (instance_ == nullptr)
 	{
-		pinstance_ = new WifiModule();
+		instance_ = new WifiModule();
 	}
 
-	return pinstance_;
+	return instance_;
 }
 
 wifiCredentials getAPCredentials(const char *key, wifiCredentials defaultCreds = wifiCredentials{ssid : "", password : ""})

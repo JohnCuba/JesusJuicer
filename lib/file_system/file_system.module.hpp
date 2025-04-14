@@ -7,7 +7,7 @@
 class FileSystemModule
 {
 private:
-	static FileSystemModule *pinstance_;
+	static FileSystemModule *instance_;
 	static const char loggTag_[3];
 
 protected:

@@ -8,16 +8,16 @@
 
 const char ServerModule::loggTag_[7] = "SERVER";
 
-ServerModule *ServerModule::pinstance_{nullptr};
+ServerModule *ServerModule::instance_{nullptr};
 
 ServerModule *ServerModule::GetInstance()
 {
-	if (pinstance_ == nullptr)
+	if (instance_ == nullptr)
 	{
-		pinstance_ = new ServerModule();
+		instance_ = new ServerModule();
 	}
 
-	return pinstance_;
+	return instance_;
 }
 
 ServerModule::ServerModule() : server{80}

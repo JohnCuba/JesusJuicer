@@ -6,7 +6,7 @@
 class UpdaterModule
 {
 private:
-	static UpdaterModule *pinstance_;
+	static UpdaterModule *instance_;
 	static const char loggTag_[8];
 
 	void registerServerRoutes(const char *fwVersion);

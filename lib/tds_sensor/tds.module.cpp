@@ -34,16 +34,16 @@ int getMedianNum(int bArray[], int iFilterLen)
 
 const char TDSModule::loggTag_[4] = "TDS";
 
-TDSModule *TDSModule::pinstance_{nullptr};
+TDSModule *TDSModule::instance_{nullptr};
 
 TDSModule *TDSModule::GetInstance()
 {
-  if (pinstance_ == nullptr)
+  if (instance_ == nullptr)
   {
-    pinstance_ = new TDSModule();
+    instance_ = new TDSModule();
   }
 
-  return pinstance_;
+  return instance_;
 }
 
 float TDSModule::getValue()

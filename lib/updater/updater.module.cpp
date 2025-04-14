@@ -5,16 +5,16 @@
 
 const char UpdaterModule::loggTag_[8] = "UPDATER";
 
-UpdaterModule *UpdaterModule::pinstance_{nullptr};
+UpdaterModule *UpdaterModule::instance_{nullptr};
 
 UpdaterModule *UpdaterModule::GetInstance()
 {
-	if (pinstance_ == nullptr)
+	if (instance_ == nullptr)
 	{
-		pinstance_ = new UpdaterModule();
+		instance_ = new UpdaterModule();
 	}
 
-	return pinstance_;
+	return instance_;
 }
 
 ArRequestHandlerFunction UpdaterModule::updateRequestHandler()

@@ -3,16 +3,16 @@
 
 const char FileSystemModule::loggTag_[3] = "FS";
 
-FileSystemModule *FileSystemModule::pinstance_{nullptr};
+FileSystemModule *FileSystemModule::instance_{nullptr};
 
 FileSystemModule *FileSystemModule::GetInstance()
 {
-  if (pinstance_ == nullptr)
+  if (instance_ == nullptr)
   {
-    pinstance_ = new FileSystemModule();
+    instance_ = new FileSystemModule();
   }
 
-  return pinstance_;
+  return instance_;
 }
 
 void FileSystemModule::onSetup()

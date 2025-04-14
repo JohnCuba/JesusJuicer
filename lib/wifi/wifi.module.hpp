@@ -7,7 +7,7 @@
 class WifiModule
 {
 private:
-	static WifiModule *pinstance_;
+	static WifiModule *instance_;
 	static const char loggTag_[5];
 
 	void createAP();

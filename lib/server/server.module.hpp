@@ -6,7 +6,7 @@
 class ServerModule
 {
 private:
-	static ServerModule *pinstance_;
+	static ServerModule *instance_;
 	static const char loggTag_[7];
 	AsyncWebServer server;
 

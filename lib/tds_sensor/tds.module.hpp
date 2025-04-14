@@ -5,7 +5,7 @@
 class TDSModule
 {
 private:
-	static TDSModule *pinstance_;
+	static TDSModule *instance_;
 	static const char loggTag_[4];
 	static const int16_t sensorPin = 36;
 	static const int16_t vRef = 3.3;
