@@ -4,16 +4,17 @@
 #pragma once
 #define CONFIG_LITTLEFS_SPIFFS_COMPAT 1
 
-class FileSystemModule {
-	private:
-	static FileSystemModule* pinstance_;
-	Logg logg = Logg("FS");
+class FileSystemModule
+{
+private:
+	static FileSystemModule *pinstance_;
+	static const char loggTag_[3];
 
-	protected:
+protected:
 	FileSystemModule() {}
 	~FileSystemModule() {}
 
-	public:
+public:
 	static FileSystemModule *GetInstance();
 	void onSetup();
 	String readFile(String path);

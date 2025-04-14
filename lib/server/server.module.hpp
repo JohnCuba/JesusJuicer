@@ -3,17 +3,18 @@
 
 #pragma once
 
-class ServerModule {
-	private:
-	static ServerModule* pinstance_;
-	Logg logg = Logg("SERVER");
+class ServerModule
+{
+private:
+	static ServerModule *pinstance_;
+	static const char loggTag_[7];
 	AsyncWebServer server;
 
-	protected:
+protected:
 	ServerModule();
 	~ServerModule();
 
-	public:
+public:
 	static ServerModule *GetInstance();
 	void onSetup();
 	void registerRoute(const char *uri, WebRequestMethodComposite method, ArRequestHandlerFunction onRequest);

@@ -10,194 +10,236 @@
 const long interval = 5000;
 
 const wifiCredentials defaultSelfAP = wifiCredentials{
-	ssid: "juicer",
-	password: "yoitsmeman",
+	ssid : "juicer",
+	password : "yoitsmeman",
 };
 
 const char selfAPStoreKey[8] = "self-ap";
 const char networkAPStoreKey[11] = "network-ap";
 
-WifiModule* WifiModule::pinstance_{nullptr};
+const char WifiModule::loggTag_[5] = "WIFI";
 
-WifiModule *WifiModule::GetInstance() {
-	if (pinstance_ == nullptr) {
+WifiModule *WifiModule::pinstance_{nullptr};
+
+WifiModule *WifiModule::GetInstance()
+{
+	if (pinstance_ == nullptr)
+	{
 		pinstance_ = new WifiModule();
 	}
 
 	return pinstance_;
 }
 
-wifiCredentials getAPCredentials(const char *key, wifiCredentials defaultCreds = wifiCredentials{ssid: "", password: ""}) {
+wifiCredentials getAPCredentials(const char *key, wifiCredentials defaultCreds = wifiCredentials{ssid : "", password : ""})
+{
 	Preferences preferences;
-  preferences.begin(key, true);
+	preferences.begin(key, true);
 
-  String ssid = preferences.getString("ssid", defaultCreds.ssid); 
-  String password = preferences.getString("password", defaultCreds.password);
+	String ssid = preferences.getString("ssid", defaultCreds.ssid);
+	String password = preferences.getString("password", defaultCreds.password);
 
 	preferences.end();
 
 	return wifiCredentials{ssid, password};
 }
 
-void setAPCredentials(const char *key, wifiCredentials creds) {
+void setAPCredentials(const char *key, wifiCredentials creds)
+{
 	Preferences preferences;
-  preferences.begin(key, false);
+	preferences.begin(key, false);
 
-  preferences.putString("ssid", creds.ssid); 
-  preferences.putString("password", creds.password);
+	preferences.putString("ssid", creds.ssid);
+	preferences.putString("password", creds.password);
 
 	preferences.end();
 }
 
-void deleteAPCredentials(const char *key) {
+void deleteAPCredentials(const char *key)
+{
 	Preferences preferences;
-  preferences.begin(key, false);
+	preferences.begin(key, false);
 
 	preferences.clear();
 
 	preferences.end();
 }
 
-void WifiModule::registerServerRoutes() {
-	logg.info("setup server routes");
+void WifiModule::registerServerRoutes()
+{
+	Logg::debug(WifiModule::loggTag_, "setup server routes");
 
-	ServerModule* server_module = ServerModule::GetInstance();
+	ServerModule *server_module = ServerModule::GetInstance();
 
-	server_module->registerRoute("/api/wifi/state", HTTP_GET, [=](AsyncWebServerRequest *request) {
-		JsonDocument responseBody;
-		JsonObject root = responseBody.to<JsonObject>();
+	server_module->registerRoute(
+			"/api/wifi/state",
+			HTTP_GET,
+			[=](AsyncWebServerRequest *request)
+			{
+				JsonDocument responseBody;
+				JsonObject root = responseBody.to<JsonObject>();
 
-		String mode = String(WiFi.getMode());
-		
-		root["mode"].set(mode);
-		root["ip"].set(mode == "1" ? WiFi.localIP().toString() : WiFi.softAPIP().toString());
-		root["rssi"].set(WiFi.RSSI());
+				String mode = String(WiFi.getMode());
 
-		AsyncWebServerResponse *response = request->beginResponse(200, RES_TYPE_JSON, responseBody.as<String>());
-		request->send(response);
-	});
+				root["mode"].set(mode);
+				root["ip"].set(mode == "1" ? WiFi.localIP().toString() : WiFi.softAPIP().toString());
+				root["rssi"].set(WiFi.RSSI());
 
-	server_module->registerRoute("/api/wifi/ap", HTTP_GET, [=](AsyncWebServerRequest *request) {
-		JsonDocument responseBody;
-		JsonObject root = responseBody.to<JsonObject>();
+				AsyncWebServerResponse *response = request->beginResponse(200, RES_TYPE_JSON, responseBody.as<String>());
+				request->send(response);
+			});
 
-		wifiCredentials creds = getAPCredentials(selfAPStoreKey, defaultSelfAP);
+	server_module->registerRoute(
+			"/api/wifi/ap",
+			HTTP_GET,
+			[=](AsyncWebServerRequest *request)
+			{
+				JsonDocument responseBody;
+				JsonObject root = responseBody.to<JsonObject>();
 
-		root["ssid"].set(creds.ssid);
-		root["password"].set(creds.password);
+				wifiCredentials creds = getAPCredentials(selfAPStoreKey, defaultSelfAP);
 
-		AsyncWebServerResponse *response = request->beginResponse(200, RES_TYPE_JSON, responseBody.as<String>());
-		request->send(response);
-	});
+				root["ssid"].set(creds.ssid);
+				root["password"].set(creds.password);
 
-	server_module->registerRoute("/api/wifi/ap", HTTP_PATCH, [=](AsyncWebServerRequest *request) {
-		if (!request->hasParam("ssid", true)) {
-			return request->send(422, RES_TYPE_TEXT, "provide ssid");
-		}
+				AsyncWebServerResponse *response = request->beginResponse(200, RES_TYPE_JSON, responseBody.as<String>());
+				request->send(response);
+			});
 
-		String ssid = request->getParam("ssid", true)->value();
-		String password = request->hasParam("password", true) ? request->getParam("password", true)->value() : String();
+	server_module->registerRoute(
+			"/api/wifi/ap",
+			HTTP_PATCH,
+			[=](AsyncWebServerRequest *request)
+			{
+				if (!request->hasParam("ssid", true))
+				{
+					return request->send(422, RES_TYPE_TEXT, "provide ssid");
+				}
 
-		JsonDocument responseBody;
+				String ssid = request->getParam("ssid", true)->value();
+				String password = request->hasParam("password", true) ? request->getParam("password", true)->value() : String();
 
-		setAPCredentials(selfAPStoreKey, wifiCredentials{ssid, password});
+				JsonDocument responseBody;
 
-		request->send(200, RES_TYPE_TEXT, RES_BODY_OK);
-	});
+				setAPCredentials(selfAPStoreKey, wifiCredentials{ssid, password});
 
-	server_module->registerRoute("/api/wifi/network", HTTP_GET, [=](AsyncWebServerRequest *request) {
-		JsonDocument responseBody;
-		JsonObject root = responseBody.to<JsonObject>();
+				request->send(200, RES_TYPE_TEXT, RES_BODY_OK);
+			});
 
-		wifiCredentials creds = getAPCredentials(networkAPStoreKey);
+	server_module->registerRoute(
+			"/api/wifi/network",
+			HTTP_GET,
+			[=](AsyncWebServerRequest *request)
+			{
+				JsonDocument responseBody;
+				JsonObject root = responseBody.to<JsonObject>();
 
-		root["ssid"].set(creds.ssid);
-		root["password"].set(creds.password);
+				wifiCredentials creds = getAPCredentials(networkAPStoreKey);
 
-		AsyncWebServerResponse *response = request->beginResponse(200, RES_TYPE_JSON, responseBody.as<String>());
-		request->send(response);
-	});
+				root["ssid"].set(creds.ssid);
+				root["password"].set(creds.password);
 
-	server_module->registerRoute("/api/wifi/network", HTTP_PATCH, [=](AsyncWebServerRequest *request) {
-		if (!request->hasParam("ssid", true)) {
-			return request->send(422, RES_TYPE_TEXT, "provide ssid");
-		}
+				AsyncWebServerResponse *response = request->beginResponse(200, RES_TYPE_JSON, responseBody.as<String>());
+				request->send(response);
+			});
 
-		String ssid = request->getParam("ssid", true)->value();
-		String password = request->hasParam("password", true) ? request->getParam("password", true)->value() : String();
-		logg.info(ssid + " " + password);
+	server_module->registerRoute(
+			"/api/wifi/network",
+			HTTP_PATCH,
+			[=](AsyncWebServerRequest *request)
+			{
+				if (!request->hasParam("ssid", true))
+				{
+					return request->send(422, RES_TYPE_TEXT, "provide ssid");
+				}
 
-		JsonDocument responseBody;
+				String ssid = request->getParam("ssid", true)->value();
+				String password = request->hasParam("password", true) ? request->getParam("password", true)->value() : String();
 
-		setAPCredentials(networkAPStoreKey, wifiCredentials{ssid, password});
+				JsonDocument responseBody;
 
-		request->send(200, RES_TYPE_TEXT, RES_BODY_OK);
-	});
+				setAPCredentials(networkAPStoreKey, wifiCredentials{ssid, password});
 
-	server_module->registerRoute("/api/wifi/network", HTTP_DELETE, [=](AsyncWebServerRequest *request) {
-		deleteAPCredentials(networkAPStoreKey);
+				request->send(200, RES_TYPE_TEXT, RES_BODY_OK);
+			});
 
-		request->send(200, RES_TYPE_TEXT, RES_BODY_OK);
-	});
+	server_module->registerRoute(
+			"/api/wifi/network",
+			HTTP_DELETE,
+			[=](AsyncWebServerRequest *request)
+			{
+				deleteAPCredentials(networkAPStoreKey);
+
+				request->send(200, RES_TYPE_TEXT, RES_BODY_OK);
+			});
 }
 
-void WifiModule::onSetup() {
-	logg.info("start setup");
+void WifiModule::onSetup()
+{
+	Logg::debug(WifiModule::loggTag_, "start setup");
 
 	registerServerRoutes();
 
-	logg.info("setup connection mode");
+	Logg::debug(WifiModule::loggTag_, "setup connection mode");
 
 	bool connected = connectToAP();
 
-	if (!connected) {
-		logg.info("create AP");
+	if (!connected)
+	{
+		Logg::warn(WifiModule::loggTag_, "connection filed, switch to AP mode");
 		createAP();
 	}
 
-	logg.info("end setup");
+	Logg::debug(WifiModule::loggTag_, "end setup");
 }
 
-bool WifiModule::connectToAP() {
+bool WifiModule::connectToAP()
+{
 	wifiCredentials creds = getAPCredentials(networkAPStoreKey);
 
-	if (creds.ssid.isEmpty()) {
-		logg.info("no saved networks finded");
+	if (creds.ssid.isEmpty())
+	{
+		Logg::warn(WifiModule::loggTag_, "no saved networks finded");
 		return false;
 	};
 
 	WiFi.mode(WIFI_MODE_STA);
 
-	logg.info("trying connecting to: " + creds.ssid + " " + creds.password);
+	// TODO: gibberish in terminal on params from Preferences
+	Logg::info(WifiModule::loggTag_, "trying connecting to: %s", String(creds.ssid).c_str());
 
 	WiFi.begin(creds.ssid, creds.password);
 
 	unsigned long currentMillis = millis();
 	unsigned long const previousMillis = currentMillis;
 
-	while(WiFi.status() != WL_CONNECTED) {
+	while (WiFi.status() != WL_CONNECTED)
+	{
 		currentMillis = millis();
 
-		if (currentMillis - previousMillis >= interval) {
-			logg.info("failed connecting to: " + creds.ssid);
+		if (currentMillis - previousMillis >= interval)
+		{
+			Logg::error(WifiModule::loggTag_, "failed connecting to: %s", creds.ssid);
 			break;
 		}
 	}
 
-	if (WiFi.status() == WL_CONNECTED) {
-		logg.info("connected to " + creds.ssid + " go to " + WiFi.localIP().toString());
+	if (WiFi.status() == WL_CONNECTED)
+	{
+		Logg::info(WifiModule::loggTag_, "connected to %s", creds.ssid.c_str());
 		return true;
 	}
 
 	return false;
 };
 
-void WifiModule::createAP() {
+void WifiModule::createAP()
+{
 	WiFi.mode(WIFI_MODE_AP);
 
 	wifiCredentials creds = getAPCredentials(selfAPStoreKey, defaultSelfAP);
 	WiFi.softAP(creds.ssid, creds.password);
 
-	logg.info("AP is created: " + WiFi.softAPSSID());
-	logg.info("IP address: " + WiFi.softAPIP().toString());
+	Logg::info(WifiModule::loggTag_, "AP is created: %s", WiFi.softAPSSID());
+	Logg::info(WifiModule::loggTag_, "IP address: %s", WiFi.softAPIP().toString());
 };

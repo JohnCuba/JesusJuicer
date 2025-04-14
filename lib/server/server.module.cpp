@@ -6,18 +6,21 @@
 #include "tds.module.hpp"
 #include "api_config.hpp"
 
-ServerModule* ServerModule::pinstance_{nullptr};
+const char ServerModule::loggTag_[7] = "SERVER";
 
-ServerModule *ServerModule::GetInstance() {
-	if (pinstance_ == nullptr) {
+ServerModule *ServerModule::pinstance_{nullptr};
+
+ServerModule *ServerModule::GetInstance()
+{
+	if (pinstance_ == nullptr)
+	{
 		pinstance_ = new ServerModule();
 	}
 
 	return pinstance_;
 }
 
-ServerModule::ServerModule() :
-	server{80}
+ServerModule::ServerModule() : server{80}
 {
 	DefaultHeaders::Instance().addHeader("Access-Control-Allow-Origin", "*");
 	DefaultHeaders::Instance().addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
@@ -25,28 +28,30 @@ ServerModule::ServerModule() :
 	DefaultHeaders::Instance().addHeader("Access-Control-Allow-Private-Network", "true");
 };
 
-void ServerModule::registerRoute(const char *uri, WebRequestMethodComposite method, ArRequestHandlerFunction onRequest) {
+void ServerModule::registerRoute(const char *uri, WebRequestMethodComposite method, ArRequestHandlerFunction onRequest)
+{
 	server.on(uri, method, onRequest);
 };
 
-void ServerModule::registerRoute(const char *uri, WebRequestMethodComposite method, ArRequestHandlerFunction onRequest, ArUploadHandlerFunction onUpload) {
+void ServerModule::registerRoute(const char *uri, WebRequestMethodComposite method, ArRequestHandlerFunction onRequest, ArUploadHandlerFunction onUpload)
+{
 	server.on(uri, method, onRequest, onUpload);
 };
 
-void ServerModule::onSetup() {
+void ServerModule::onSetup()
+{
 	MDNS.begin("juicer");
 
 	server.serveStatic("/", LittleFS, "/public/");
 
-	server.on("/*", HTTP_GET, [](AsyncWebServerRequest *request) {
+	server.on("/*", HTTP_GET, [](AsyncWebServerRequest *request)
+						{
 		AsyncWebServerResponse *response = request->beginResponse(LittleFS, "/public/index.html.gz", "text/html");
 		response->addHeader("Content-Encoding", "gzip");
-		request->send(response);
-	});
+		request->send(response); });
 
-	server.on("/api/*", HTTP_OPTIONS, [](AsyncWebServerRequest *request) {
-		request->send(200, RES_TYPE_TEXT, RES_BODY_OK);
-	});
+	server.on("/api/*", HTTP_OPTIONS, [](AsyncWebServerRequest *request)
+						{ request->send(200, RES_TYPE_TEXT, RES_BODY_OK); });
 
 	server.begin();
 };

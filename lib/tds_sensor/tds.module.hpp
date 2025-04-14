@@ -2,10 +2,11 @@
 
 #pragma once
 
-class TDSModule {
-	private:
-	static TDSModule* pinstance_;
-	Logg logg = Logg("TDS");
+class TDSModule
+{
+private:
+	static TDSModule *pinstance_;
+	static const char loggTag_[4];
 	static const int16_t sensorPin = 36;
 	static const int16_t vRef = 3.3;
 	static const int16_t sCount = 30;
@@ -21,11 +22,11 @@ class TDSModule {
 
 	void registerServerRoutes();
 
-	protected:
+protected:
 	TDSModule() {}
 	~TDSModule() {}
 
-	public:
+public:
 	static TDSModule *GetInstance();
 	void onSetup();
 	float getValue();

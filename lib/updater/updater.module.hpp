@@ -3,20 +3,21 @@
 #include <ESPAsyncWebServer.h>
 #include "logg.hpp"
 
-class UpdaterModule {
-	private:
-	static UpdaterModule* pinstance_;
-	Logg logg = Logg("UPDATER");
+class UpdaterModule
+{
+private:
+	static UpdaterModule *pinstance_;
+	static const char loggTag_[8];
 
-	void registerServerRoutes(const char* fwVersion);
+	void registerServerRoutes(const char *fwVersion);
 	ArRequestHandlerFunction updateRequestHandler();
 	ArUploadHandlerFunction updateUploadHandler(int command);
 
-	protected:
+protected:
 	UpdaterModule() {};
 	~UpdaterModule() {};
 
-	public:
+public:
 	static UpdaterModule *GetInstance();
-	void onSetup(const char* fwVersion);
+	void onSetup(const char *fwVersion);
 };

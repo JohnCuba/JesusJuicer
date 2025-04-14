@@ -1,35 +1,44 @@
 #include "LittleFS.h"
 #include "file_system.module.hpp"
 
-FileSystemModule* FileSystemModule::pinstance_{nullptr};
+const char FileSystemModule::loggTag_[3] = "FS";
 
-FileSystemModule *FileSystemModule::GetInstance() {
-	if (pinstance_ == nullptr) {
-		pinstance_ = new FileSystemModule();
-	}
+FileSystemModule *FileSystemModule::pinstance_{nullptr};
 
-	return pinstance_;
-}
-
-void FileSystemModule::onSetup() {
-  if (!LittleFS.begin(true)) {
-    logg.info("An error has occurred while mounting LittleFS");
+FileSystemModule *FileSystemModule::GetInstance()
+{
+  if (pinstance_ == nullptr)
+  {
+    pinstance_ = new FileSystemModule();
   }
-  logg.info("mounted successfully");
+
+  return pinstance_;
 }
 
-String FileSystemModule::readFile(String path) {
+void FileSystemModule::onSetup()
+{
+  if (!LittleFS.begin(true))
+  {
+    Logg::error(FileSystemModule::loggTag_, "An error has occurred while mounting LittleFS");
+  }
+  Logg::info(FileSystemModule::loggTag_, "mounted successfully");
+}
+
+String FileSystemModule::readFile(String path)
+{
   File file = LittleFS.open(path, FILE_READ);
 
-  if(!file || file.isDirectory()){
-    logg.info("failed to open file for reading");
+  if (!file || file.isDirectory())
+  {
+    Logg::error(FileSystemModule::loggTag_, "failed to open file for reading");
     return String();
   }
 
   String fileContent;
-  while(file.available()){
+  while (file.available())
+  {
     fileContent = file.readString();
-    break;     
+    break;
   }
 
   file.close();
@@ -37,7 +46,8 @@ String FileSystemModule::readFile(String path) {
   return fileContent;
 }
 
-void FileSystemModule::writeFile(String path, String content) {
+void FileSystemModule::writeFile(String path, String content)
+{
   File file = LittleFS.open(path, FILE_WRITE);
 
   file.print(content);
@@ -45,7 +55,8 @@ void FileSystemModule::writeFile(String path, String content) {
   file.close();
 }
 
-void FileSystemModule::writeFile(String path, JsonDocument content) {
+void FileSystemModule::writeFile(String path, JsonDocument content)
+{
   File file = LittleFS.open(path, FILE_WRITE);
 
   serializeJson(content, file);

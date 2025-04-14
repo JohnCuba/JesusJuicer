@@ -4,20 +4,21 @@
 
 #pragma once
 
-class WifiModule {
-	private:
-	static WifiModule* pinstance_;
-	Logg logg = Logg("WIFI");
+class WifiModule
+{
+private:
+	static WifiModule *pinstance_;
+	static const char loggTag_[5];
 
 	void createAP();
 	bool connectToAP();
 	void registerServerRoutes();
 
-	protected:
+protected:
 	WifiModule() {}
 	~WifiModule() {}
 
-	public:
+public:
 	static WifiModule *GetInstance();
 	void onSetup();
 };
