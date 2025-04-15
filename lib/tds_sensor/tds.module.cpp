@@ -98,7 +98,7 @@ void TDSModule::registerServerRoutes()
       HTTP_GET,
       [=](AsyncWebServerRequest *request)
       {
-        request->send(200, RES_TYPE_TEXT, String(getValue()).c_str());
+        request->send(200, RES_TYPE_TEXT, std::to_string(getValue()).c_str());
       });
 
   ServerModule::registerRoute(

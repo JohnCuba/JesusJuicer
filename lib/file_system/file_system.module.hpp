@@ -1,3 +1,4 @@
+#include <string>
 #include "logg.hpp"
 #include "ArduinoJson.h"
 
@@ -11,7 +12,7 @@ private:
 
 public:
 	static void onSetup();
-	static String readFile(String path);
-	static void writeFile(String path, String content);
-	static void writeFile(String path, JsonDocument json);
+	static std::string readFile(const char *path);
+	static void writeFile(const char *path, std::string content);
+	static void writeFile(const char *path, JsonDocument json);
 };

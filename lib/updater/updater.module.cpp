@@ -58,7 +58,7 @@ ArUploadHandlerFunction UpdaterModule::updateUploadHandler(int command)
 				Update.printError(Serial);
 			}
 
-			Logg::info(UpdaterModule::loggTag_, "Upload Complete: [%s],size: [%s]", String(filename), String(index + len));
+			Logg::info(UpdaterModule::loggTag_, "Upload Complete: [%s],size: [%n]", filename, index + len);
 		}
 	};
 }
@@ -72,7 +72,7 @@ void UpdaterModule::registerServerRoutes(const char *fwVersion)
 			HTTP_GET,
 			[=](AsyncWebServerRequest *request)
 			{
-				request->send(200, RES_TYPE_TEXT, String(fwVersion).c_str());
+				request->send(200, RES_TYPE_TEXT, fwVersion);
 			});
 
 	ServerModule::registerRoute(

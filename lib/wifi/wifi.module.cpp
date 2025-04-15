@@ -84,7 +84,7 @@ void WifiModule::registerServerRoutes()
 				root["ip"].set(mode == WIFI_MODE_STA ? WiFi.localIP() : WiFi.softAPIP());
 				root["rssi"].set(WiFi.RSSI());
 
-				AsyncWebServerResponse *response = request->beginResponse(200, RES_TYPE_JSON, responseBody.as<String>());
+				AsyncWebServerResponse *response = request->beginResponse(200, RES_TYPE_JSON, responseBody.as<std::string>().c_str());
 				request->send(response);
 			});
 
@@ -101,7 +101,7 @@ void WifiModule::registerServerRoutes()
 				root["ssid"].set(creds.ssid);
 				root["password"].set(creds.password);
 
-				AsyncWebServerResponse *response = request->beginResponse(200, RES_TYPE_JSON, responseBody.as<String>());
+				AsyncWebServerResponse *response = request->beginResponse(200, RES_TYPE_JSON, responseBody.as<std::string>().c_str());
 				request->send(response);
 			});
 
@@ -138,7 +138,7 @@ void WifiModule::registerServerRoutes()
 				root["ssid"].set(creds.ssid);
 				root["password"].set(creds.password);
 
-				AsyncWebServerResponse *response = request->beginResponse(200, RES_TYPE_JSON, responseBody.as<String>());
+				AsyncWebServerResponse *response = request->beginResponse(200, RES_TYPE_JSON, responseBody.as<std::string>().c_str());
 				request->send(response);
 			});
 

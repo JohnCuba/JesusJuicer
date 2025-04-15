@@ -12,20 +12,20 @@ void FileSystemModule::onSetup()
   Logg::info(FileSystemModule::loggTag_, "mounted successfully");
 }
 
-String FileSystemModule::readFile(String path)
+std::string FileSystemModule::readFile(const char *path)
 {
   File file = LittleFS.open(path, FILE_READ);
 
   if (!file || file.isDirectory())
   {
     Logg::error(FileSystemModule::loggTag_, "failed to open file for reading");
-    return String();
+    return "";
   }
 
-  String fileContent;
+  std::string fileContent;
   while (file.available())
   {
-    fileContent = file.readString();
+    fileContent = file.readString().c_str();
     break;
   }
 
@@ -34,16 +34,16 @@ String FileSystemModule::readFile(String path)
   return fileContent;
 }
 
-void FileSystemModule::writeFile(String path, String content)
+void FileSystemModule::writeFile(const char *path, std::string content)
 {
   File file = LittleFS.open(path, FILE_WRITE);
 
-  file.print(content);
+  file.print(content.c_str());
 
   file.close();
 }
 
-void FileSystemModule::writeFile(String path, JsonDocument content)
+void FileSystemModule::writeFile(const char *path, JsonDocument content)
 {
   File file = LittleFS.open(path, FILE_WRITE);
 
