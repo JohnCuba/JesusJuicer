@@ -93,9 +93,7 @@ void TDSModule::registerServerRoutes()
 {
   Logg::debug(TDSModule::loggTag_, "setup server routes");
 
-  ServerModule *server_module = ServerModule::GetInstance();
-
-  server_module->registerRoute(
+  ServerModule::registerRoute(
       "/api/tds",
       HTTP_GET,
       [=](AsyncWebServerRequest *request)
@@ -103,7 +101,7 @@ void TDSModule::registerServerRoutes()
         request->send(200, RES_TYPE_TEXT, String(getValue()).c_str());
       });
 
-  server_module->registerRoute(
+  ServerModule::registerRoute(
       "/api/tds",
       HTTP_OPTIONS,
       [=](AsyncWebServerRequest *request)

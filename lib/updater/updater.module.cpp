@@ -5,18 +5,6 @@
 
 const char UpdaterModule::loggTag_[8] = "UPDATER";
 
-UpdaterModule *UpdaterModule::instance_{nullptr};
-
-UpdaterModule *UpdaterModule::GetInstance()
-{
-	if (instance_ == nullptr)
-	{
-		instance_ = new UpdaterModule();
-	}
-
-	return instance_;
-}
-
 ArRequestHandlerFunction UpdaterModule::updateRequestHandler()
 {
 	return [=](AsyncWebServerRequest *request)
@@ -79,18 +67,21 @@ void UpdaterModule::registerServerRoutes(const char *fwVersion)
 {
 	Logg::debug(UpdaterModule::loggTag_, "updater server routes");
 
-	ServerModule *server_module = ServerModule::GetInstance();
+	ServerModule::registerRoute(
+			"/api/update/fw",
+			HTTP_GET,
+			[=](AsyncWebServerRequest *request)
+			{
+				request->send(200, RES_TYPE_TEXT, String(fwVersion).c_str());
+			});
 
-	server_module->registerRoute("/api/update/fw", HTTP_GET, [=](AsyncWebServerRequest *request)
-															 { request->send(200, RES_TYPE_TEXT, String(fwVersion).c_str()); });
-
-	server_module->registerRoute(
+	ServerModule::registerRoute(
 			"/api/update/fw",
 			HTTP_POST,
 			updateRequestHandler(),
 			updateUploadHandler(U_FLASH));
 
-	server_module->registerRoute(
+	ServerModule::registerRoute(
 			"/api/update/fs",
 			HTTP_POST,
 			updateRequestHandler(),

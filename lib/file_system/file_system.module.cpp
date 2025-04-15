@@ -3,18 +3,6 @@
 
 const char FileSystemModule::loggTag_[3] = "FS";
 
-FileSystemModule *FileSystemModule::instance_{nullptr};
-
-FileSystemModule *FileSystemModule::GetInstance()
-{
-  if (instance_ == nullptr)
-  {
-    instance_ = new FileSystemModule();
-  }
-
-  return instance_;
-}
-
 void FileSystemModule::onSetup()
 {
   if (!LittleFS.begin(true))

@@ -9,22 +9,19 @@
 #define FIRMWARE_VERSION "0.0.4"
 
 // Modules
-WifiModule* wifi_module = WifiModule::GetInstance();
-TDSModule* tds_module = TDSModule::GetInstance();
-FileSystemModule* fs_module = FileSystemModule::GetInstance();
-ServerModule* server_module = ServerModule::GetInstance();
-UpdaterModule* updater_module = UpdaterModule::GetInstance();
+TDSModule *tds_module = TDSModule::GetInstance();
 
-void setup() {
+void setup()
+{
   Serial.begin(115200);
 
   tds_module->onSetup();
-  fs_module->onSetup();
-  wifi_module->onSetup();
-  updater_module->onSetup(FIRMWARE_VERSION);
+  FileSystemModule::onSetup();
+  WifiModule::onSetup();
+  UpdaterModule::onSetup(FIRMWARE_VERSION);
   // Server must be latest so modules can register their routes
   // TODO: Move routes registration to server module
-  server_module->onSetup();
+  ServerModule::onSetup();
 
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH);

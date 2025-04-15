@@ -8,25 +8,7 @@
 
 const char ServerModule::loggTag_[7] = "SERVER";
 
-ServerModule *ServerModule::instance_{nullptr};
-
-ServerModule *ServerModule::GetInstance()
-{
-	if (instance_ == nullptr)
-	{
-		instance_ = new ServerModule();
-	}
-
-	return instance_;
-}
-
-ServerModule::ServerModule() : server{80}
-{
-	DefaultHeaders::Instance().addHeader("Access-Control-Allow-Origin", "*");
-	DefaultHeaders::Instance().addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
-	DefaultHeaders::Instance().addHeader("Access-Control-Allow-Headers", "Content-Type, Content-Disposition, Authorization, X-Custom-Header");
-	DefaultHeaders::Instance().addHeader("Access-Control-Allow-Private-Network", "true");
-};
+AsyncWebServer ServerModule::server{80};
 
 void ServerModule::registerRoute(const char *uri, WebRequestMethodComposite method, ArRequestHandlerFunction onRequest)
 {
@@ -41,6 +23,11 @@ void ServerModule::registerRoute(const char *uri, WebRequestMethodComposite meth
 void ServerModule::onSetup()
 {
 	MDNS.begin("juicer");
+
+	DefaultHeaders::Instance().addHeader("Access-Control-Allow-Origin", "*");
+	DefaultHeaders::Instance().addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
+	DefaultHeaders::Instance().addHeader("Access-Control-Allow-Headers", "Content-Type, Content-Disposition, Authorization, X-Custom-Header");
+	DefaultHeaders::Instance().addHeader("Access-Control-Allow-Private-Network", "true");
 
 	server.serveStatic("/", LittleFS, "/public/");
 

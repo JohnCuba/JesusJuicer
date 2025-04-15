@@ -7,17 +7,11 @@
 class FileSystemModule
 {
 private:
-	static FileSystemModule *instance_;
 	static const char loggTag_[3];
 
-protected:
-	FileSystemModule() {}
-	~FileSystemModule() {}
-
 public:
-	static FileSystemModule *GetInstance();
-	void onSetup();
-	String readFile(String path);
-	void writeFile(String path, String content);
-	void writeFile(String path, JsonDocument json);
+	static void onSetup();
+	static String readFile(String path);
+	static void writeFile(String path, String content);
+	static void writeFile(String path, JsonDocument json);
 };

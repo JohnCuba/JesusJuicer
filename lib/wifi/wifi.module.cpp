@@ -7,8 +7,6 @@
 #include "server.module.hpp"
 #include "api_config.hpp"
 
-const long interval = 5000;
-
 const wifiCredentials defaultSelfAP = wifiCredentials{
 	ssid : "juicer",
 	password : "yoitsmeman",
@@ -19,19 +17,7 @@ const char networkAPStoreKey[11] = "network-ap";
 
 const char WifiModule::loggTag_[5] = "WIFI";
 
-WifiModule *WifiModule::instance_{nullptr};
-
-WifiModule *WifiModule::GetInstance()
-{
-	if (instance_ == nullptr)
-	{
-		instance_ = new WifiModule();
-	}
-
-	return instance_;
-}
-
-wifiCredentials getAPCredentials(const char *key, wifiCredentials defaultCreds = wifiCredentials{ssid : "", password : ""})
+wifiCredentials WifiModule::getAPCredentials(const char *key, wifiCredentials defaultCreds = wifiCredentials{ssid : "", password : ""})
 {
 	Preferences preferences;
 	preferences.begin(key, true);
@@ -44,7 +30,7 @@ wifiCredentials getAPCredentials(const char *key, wifiCredentials defaultCreds =
 	return wifiCredentials{ssid, password};
 }
 
-void setAPCredentials(const char *key, wifiCredentials creds)
+void WifiModule::setAPCredentials(const char *key, wifiCredentials creds)
 {
 	Preferences preferences;
 	preferences.begin(key, false);
@@ -55,7 +41,7 @@ void setAPCredentials(const char *key, wifiCredentials creds)
 	preferences.end();
 }
 
-void deleteAPCredentials(const char *key)
+void WifiModule::deleteAPCredentials(const char *key)
 {
 	Preferences preferences;
 	preferences.begin(key, false);
@@ -69,9 +55,7 @@ void WifiModule::registerServerRoutes()
 {
 	Logg::debug(WifiModule::loggTag_, "setup server routes");
 
-	ServerModule *server_module = ServerModule::GetInstance();
-
-	server_module->registerRoute(
+	ServerModule::registerRoute(
 			"/api/wifi/state",
 			HTTP_GET,
 			[=](AsyncWebServerRequest *request)
@@ -79,17 +63,17 @@ void WifiModule::registerServerRoutes()
 				JsonDocument responseBody;
 				JsonObject root = responseBody.to<JsonObject>();
 
-				String mode = String(WiFi.getMode());
+				wifi_mode_t mode = WiFi.getMode();
 
 				root["mode"].set(mode);
-				root["ip"].set(mode == "1" ? WiFi.localIP().toString() : WiFi.softAPIP().toString());
+				root["ip"].set(mode == WIFI_MODE_STA ? WiFi.localIP().toString() : WiFi.softAPIP().toString());
 				root["rssi"].set(WiFi.RSSI());
 
 				AsyncWebServerResponse *response = request->beginResponse(200, RES_TYPE_JSON, responseBody.as<String>());
 				request->send(response);
 			});
 
-	server_module->registerRoute(
+	ServerModule::registerRoute(
 			"/api/wifi/ap",
 			HTTP_GET,
 			[=](AsyncWebServerRequest *request)
@@ -106,7 +90,7 @@ void WifiModule::registerServerRoutes()
 				request->send(response);
 			});
 
-	server_module->registerRoute(
+	ServerModule::registerRoute(
 			"/api/wifi/ap",
 			HTTP_PATCH,
 			[=](AsyncWebServerRequest *request)
@@ -126,7 +110,7 @@ void WifiModule::registerServerRoutes()
 				request->send(200, RES_TYPE_TEXT, RES_BODY_OK);
 			});
 
-	server_module->registerRoute(
+	ServerModule::registerRoute(
 			"/api/wifi/network",
 			HTTP_GET,
 			[=](AsyncWebServerRequest *request)
@@ -143,7 +127,7 @@ void WifiModule::registerServerRoutes()
 				request->send(response);
 			});
 
-	server_module->registerRoute(
+	ServerModule::registerRoute(
 			"/api/wifi/network",
 			HTTP_PATCH,
 			[=](AsyncWebServerRequest *request)
@@ -163,7 +147,7 @@ void WifiModule::registerServerRoutes()
 				request->send(200, RES_TYPE_TEXT, RES_BODY_OK);
 			});
 
-	server_module->registerRoute(
+	ServerModule::registerRoute(
 			"/api/wifi/network",
 			HTTP_DELETE,
 			[=](AsyncWebServerRequest *request)
@@ -212,6 +196,8 @@ bool WifiModule::connectToAP()
 
 	unsigned long currentMillis = millis();
 	unsigned long const previousMillis = currentMillis;
+
+	const long interval = 5000;
 
 	while (WiFi.status() != WL_CONNECTED)
 	{
