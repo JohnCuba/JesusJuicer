@@ -14,8 +14,8 @@ private:
 	static void createAP();
 	static bool connectToAP();
 	static void registerServerRoutes();
-	static wifiCredentials getAPCredentials(const char *key, wifiCredentials defaultCreds);
-	static void setAPCredentials(const char *key, wifiCredentials creds);
+	static wifiCredentials getAPCredentials(const char *key, const wifiCredentials &);
+	static void setAPCredentials(const char *key, const wifiCredentials &creds);
 	static void deleteAPCredentials(const char *key);
 
 public:

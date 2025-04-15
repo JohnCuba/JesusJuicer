@@ -1,12 +1,9 @@
-#include <Arduino.h>
-#include "ArduinoJson.h"
+#include <string>
 
 #pragma once
 
-struct wifiCredentials {
-	String ssid;
-	String password;
+struct wifiCredentials
+{
+	std::string ssid;
+	std::string password;
 };
-
-void convertFromJson(JsonVariantConst src, wifiCredentials& dst);
-void convertToJson(wifiCredentials src, JsonVariant variant);
