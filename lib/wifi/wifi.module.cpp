@@ -23,7 +23,7 @@ wifiCredentials WifiModule::getAPCredentials(const char *key, const wifiCredenti
 	Preferences preferences;
 	if (!preferences.begin(key, true))
 	{
-		Logg::error("Error open preferences key: %s", key);
+		Logg::error(WifiModule::loggTag_, "Error open preferences key: %s", key);
 		return defaultCreds;
 	}
 
@@ -40,7 +40,7 @@ void WifiModule::setAPCredentials(const char *key, const wifiCredentials &creds)
 	Preferences preferences;
 	if (!preferences.begin(key, false))
 	{
-		Logg::error("Error open preferences key: %s", key);
+		Logg::error(WifiModule::loggTag_, "Error open preferences key: %s", key);
 		return;
 	}
 
@@ -53,13 +53,13 @@ void WifiModule::deleteAPCredentials(const char *key)
 	Preferences preferences;
 	if (!preferences.begin(key, false))
 	{
-		Logg::error("Error open preferences key: %s", key);
+		Logg::error(WifiModule::loggTag_, "Error open preferences key: %s", key);
 		return;
 	}
 
 	if (!preferences.clear())
 	{
-		Logg::error("Error clear preferences key: %s", key);
+		Logg::error(WifiModule::loggTag_, "Error clear preferences key: %s", key);
 		return;
 	}
 

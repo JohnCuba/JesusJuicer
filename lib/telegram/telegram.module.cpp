@@ -17,7 +17,7 @@ std::string TelegramModule::getChatId()
 	Preferences preferences;
 	if (!preferences.begin(STORE_NAMESPACE, true))
 	{
-		Logg::error("Error open preferences key: %s", STORE_NAMESPACE);
+		Logg::error(TelegramModule::loggTag_, "Error open preferences key: %s", STORE_NAMESPACE);
 		return "";
 	}
 
@@ -32,7 +32,7 @@ void TelegramModule::setChatId(std::string value)
 	Preferences preferences;
 	if (!preferences.begin(STORE_NAMESPACE))
 	{
-		Logg::error("Error open preferences key: %s", STORE_NAMESPACE);
+		Logg::error(TelegramModule::loggTag_, "Error open preferences key: %s", STORE_NAMESPACE);
 		return;
 	}
 
