@@ -9,7 +9,7 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 import svgLoader from 'vite-svg-loader'
 import tailwindcss from '@tailwindcss/vite'
 
-const viteGzipPlugin = (): Plugin => {
+const viteGzipPlugin = (options?: { log?: boolean }): Plugin => {
   const acceptedExt = ['.html', '.css', '.js', '.ico']
   const niceBytes = (byteLength: string) => {
     const units = ['b', 'kB', 'mB']
@@ -28,7 +28,9 @@ const viteGzipPlugin = (): Plugin => {
     apply: 'build',
     enforce: 'post',
     async closeBundle() {
-      console.info(styleText('blue', 'Start compressing'))
+      if (options?.log) {
+        console.info(styleText('blue', 'Start compressing'))
+      }
       const timeStart = Date.now()
       const outputLineGap = 4
       let maxLine = 0
@@ -50,25 +52,28 @@ const viteGzipPlugin = (): Plugin => {
         unlinkSync(absoluteFilePath)
         writeFileSync(absoluteFilePath + '.gz', compressedFile)
 
-        const outputFileName = this.environment.config.build.outDir + filePath + '.gz'
-        const outputFileSize = niceBytes(compressedFile.byteLength.toString())
-        const lineSize = outputFileName.length + outputFileSize.length
-        maxLine = lineSize > maxLine ? lineSize : maxLine
-        results.push([outputFileName, outputFileSize])
+        if (options?.log) {
+          const outputFileName = this.environment.config.build.outDir + filePath + '.gz'
+          const outputFileSize = niceBytes(compressedFile.byteLength.toString())
+          const lineSize = outputFileName.length + outputFileSize.length
+          maxLine = lineSize > maxLine ? lineSize : maxLine
+          results.push([outputFileName, outputFileSize])
+        }
       })
+      if (options?.log) {
+        console.info(
+          results.reduce((output, [fileName, fileSize], index) => {
+            return (
+              output +
+              (index ? '\n' : '') +
+              fileName.padEnd(maxLine + outputLineGap - fileSize.length) +
+              fileSize
+            )
+          }, ''),
+        )
 
-      console.info(
-        results.reduce((output, [fileName, fileSize], index) => {
-          return (
-            output +
-            (index ? '\n' : '') +
-            fileName.padEnd(maxLine + outputLineGap - fileSize.length) +
-            fileSize
-          )
-        }, ''),
-      )
-
-      console.info(styleText('green', `✓ Compressed in ${Date.now() - timeStart}ms`))
+        console.info(styleText('green', `✓ Compressed in ${Date.now() - timeStart}ms`))
+      }
     },
   }
 }
@@ -89,6 +94,6 @@ export default defineConfig({
         chunkFileNames: (chunkInfo) => `assets/${chunkInfo.name.split('.')[0]}-[hash].js`,
       },
     },
-    reportCompressedSize: false,
+    reportCompressedSize: true,
   },
 })
