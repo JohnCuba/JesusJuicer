@@ -9,7 +9,7 @@
     "type-check": "bunx --bun vue-tsc --build",
     "lint": "bunx --bun eslint . --fix",
     "format": "bunx --bun prettier --write src/",
-    "gen:api": "bun swagger-typescript-api -p ../open_api.schema.yaml -o ./src/data -n config_api.ts --unwrap-response-data"
+    "gen:api": "bunx --bun swagger-typescript-api generate -p ../open_api.schema.yaml -o ./src/data -n config_api.ts --unwrap-response-data"
   },
   "dependencies": {
     "swrv": "^1.1.0",
