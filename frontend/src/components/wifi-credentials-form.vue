@@ -38,7 +38,7 @@ watch(
 </script>
 
 <template>
-  <form class="flex flex-col gap-4" @click.stop="">
+  <form class="flex flex-col gap-2" @click.stop="">
     <input
       placeholder="SSID"
       type="text"
@@ -61,7 +61,7 @@ watch(
       :disabled="isLoading"
       v-model="password"
     />
-    <div class="card-actions flex justify-end">
+    <div class="flex justify-end gap-4">
       <button
         v-if="delitable"
         type="button"
@@ -70,7 +70,7 @@ watch(
       >
         <IconClose width="1.5em" />
       </button>
-      <button type="button" @click="hadndleSave" class="btn btn-success">Save</button>
+      <button type="button" @click="hadndleSave" class="btn btn-success">save</button>
     </div>
   </form>
 </template>
