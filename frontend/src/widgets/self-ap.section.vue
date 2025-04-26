@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import ContentSection from '@/components/content-section.vue'
 import WifiCredentialsForm from '@/components/wifi-credentials-form.vue'
 import type { WifiCredentials } from '@/data/config_api'
 import { useGetSelfAp, useSetSelfAp } from '@/data/wifi'
@@ -14,7 +13,8 @@ const handleSave = (creds: WifiCredentials) => {
 </script>
 
 <template>
-  <ContentSection title="Self" subtitle="Edit credentials of self access point">
+  <div class="flex flex-col gap-1">
+    <h3>Edit self access point</h3>
     <WifiCredentialsForm :default-values="data" :is-loading="isLoading" @save="handleSave" />
-  </ContentSection>
+  </div>
 </template>

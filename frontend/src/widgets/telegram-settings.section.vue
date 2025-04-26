@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import ContentSection from '@/components/content-section.vue'
 import { useGetTelegramChatId, usePingTelegram, useSetTelegramChatId } from '@/data/telegram'
 
 const { data: chatId, isLoading: chatIdLoading } = useGetTelegramChatId()
@@ -21,9 +22,8 @@ const handleSaveChatId = (event: Event) => {
 </script>
 
 <template>
-  <h2 id="telegram" class="text-xl">Telegram bot</h2>
-  <section>
-    <form class="flex flex-col gap-4" @submit.prevent="handleSaveChatId">
+  <ContentSection id="telegram" title="Telegram bot">
+    <form class="flex flex-col gap-2" @submit.prevent="handleSaveChatId">
       <input
         type="text"
         name="chat_id"
@@ -47,5 +47,5 @@ const handleSaveChatId = (event: Event) => {
         <button class="btn btn-success" type="submit">save</button>
       </div>
     </form>
-  </section>
+  </ContentSection>
 </template>

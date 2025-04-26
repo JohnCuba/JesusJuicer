@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import ContentSection from '@/components/content-section.vue'
 import WifiCredentialsForm from '@/components/wifi-credentials-form.vue'
 import { useGetNetworkAP, useSetNetworkAP, useDelNetworkAP } from '@/data/wifi'
 import type { WifiCredentials } from '@/data/config_api'
@@ -18,7 +17,8 @@ const handleSave = (data: WifiCredentials) => {
 </script>
 
 <template>
-  <ContentSection title="Network" subtitle="Edit credentials of access point to connect">
+  <div class="flex flex-col gap-1">
+    <h3>Edit access point to connect</h3>
     <WifiCredentialsForm
       delitable
       :is-loading="isLoading"
@@ -26,5 +26,5 @@ const handleSave = (data: WifiCredentials) => {
       @save="handleSave"
       @delete="handleDelete"
     />
-  </ContentSection>
+  </div>
 </template>

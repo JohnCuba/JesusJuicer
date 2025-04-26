@@ -7,7 +7,7 @@ import iconThemeControl from '@/components/icon-theme-control.vue'
 
 <template>
   <main class="flex-auto p-4 flex flex-col gap-4 bg-base-100">
-    <div class="flex-auto grid content-end grid-flow-row-dense grid-cols-2 grid-rows-4 gap-4">
+    <div class="flex-auto grid content-end grid-flow-row-dense grid-cols-2 gap-4">
       <TdsTile class="col-span-2" />
       <WifiTile />
       <UpdateTile />
