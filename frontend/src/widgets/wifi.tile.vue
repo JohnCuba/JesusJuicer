@@ -14,7 +14,7 @@ const { data: wifiState } = useGetWifiState()
 </script>
 
 <template>
-  <HomeTile url-path="/wifi" label="Wi-Fi">
+  <HomeTile url-path="/config#wi-fi" label="Wi-Fi">
     <div class="flex-auto flex flex-col justify-end">
       <span class="font-mono text-xl">{{ wifiModes[wifiState?.mode || '0'] }}</span>
       <span class="font-mono text-xl">{{ wifiState?.ip }}</span>
