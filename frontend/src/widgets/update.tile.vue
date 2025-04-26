@@ -10,7 +10,7 @@ const { data: fwVersion } = useGetFwVersion()
 </script>
 
 <template>
-  <HomeTile url-path="/update" label="Update">
+  <HomeTile url-path="/config#update" label="Update">
     <div class="flex flex-auto flex-col justify-end">
       <span v-if="fwVersion === fsVersion" class="font-mono text-xl">{{ fwVersion }}</span>
       <template v-else>

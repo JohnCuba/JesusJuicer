@@ -9,16 +9,19 @@ const router = createRouter({
       component: () => import('@/views/home.vue'),
     },
     {
-      path: '/wifi',
-      name: 'wi-fi',
-      component: () => import('@/views/wifi.vue'),
-    },
-    {
-      path: '/update',
-      name: 'update',
-      component: () => import('@/views/update.vue'),
+      path: '/config',
+      name: 'config',
+      component: () => import('@/views/config.vue'),
     },
   ],
+  scrollBehavior(to) {
+    if (to.hash) {
+      return {
+        el: to.hash,
+        behavior: 'smooth',
+      }
+    }
+  },
 })
 
 export default router
