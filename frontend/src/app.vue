@@ -6,7 +6,7 @@ useColorThemeWatcher()
 
 <template>
   <div class="bg-neutral">
-    <div class="min-h-dvh max-w-lg mx-auto flex flex-col">
+    <div class="min-h-svh max-w-lg mx-auto flex flex-col">
       <RouterView />
     </div>
   </div>
