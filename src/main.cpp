@@ -5,6 +5,7 @@
 #include "server.module.hpp"
 #include "tds.module.hpp"
 #include "updater.module.hpp"
+#include "telegram.module.hpp"
 
 #define FIRMWARE_VERSION "0.0.4"
 
@@ -19,6 +20,7 @@ void setup()
   FileSystemModule::onSetup();
   WifiModule::onSetup();
   UpdaterModule::onSetup(FIRMWARE_VERSION);
+  TelegramModule::onSetup();
   // Server must be latest so modules can register their routes
   // TODO: Move routes registration to server module
   ServerModule::onSetup();

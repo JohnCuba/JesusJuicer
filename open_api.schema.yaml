@@ -22,6 +22,7 @@ paths:
           $ref: "#/components/responses/Ok"
         400:
           $ref: "#/components/responses/Bad"
+
   /api/wifi/ap:
     get:
       security: []
@@ -32,7 +33,7 @@ paths:
       parameters: []
       operationId: getApCredentials
       responses:
-        "200":
+        200:
           content:
             application/json:
               schema:
@@ -68,7 +69,7 @@ paths:
         - wifi
       summary: get wifi state
       responses:
-        "200":
+        200:
           content:
             application/json:
               schema:
@@ -100,7 +101,7 @@ paths:
         - wifi
       summary: get network ap credentials
       responses:
-        "200":
+        200:
           content:
             application/json:
               schema:
@@ -141,6 +142,7 @@ paths:
           $ref: "#/components/responses/Ok"
         400:
           $ref: "#/components/responses/Bad"
+
   /api/tds:
     get:
       security: []
@@ -149,7 +151,7 @@ paths:
         - tds
       summary: Get tds sensor value
       responses:
-        "200":
+        200:
           description:
             The request was successful, and the server has returned the
             requested resource in the response body.
@@ -160,6 +162,7 @@ paths:
                 title: GetTdsSensorValueOk
         400:
           $ref: "#/components/responses/Bad"
+
   /api/update/fw:
     get:
       security: []
@@ -168,7 +171,7 @@ paths:
         - update
       summary: get firmware version
       responses:
-        "200":
+        200:
           description: The request was successful, and the server has returned firmware version.
           content:
             text/plain:
@@ -198,7 +201,6 @@ paths:
           $ref: "#/components/responses/Ok"
         400:
           $ref: "#/components/responses/Bad"
-
   /api/update/fs:
     post:
       security: []
@@ -223,6 +225,61 @@ paths:
           $ref: "#/components/responses/Ok"
         400:
           $ref: "#/components/responses/Bad"
+
+  /api/telegram/chat_id:
+    get:
+      security: []
+      operationId: getTelegramChatId
+      tags:
+        - telegram
+      summary: Get telegram chat_id for bot
+      responses:
+        200:
+          description:
+            The request was successful, and the server has returned the
+            requested resource in the response body.
+          content:
+            text/plain:
+              schema:
+                type: string
+                title: GetTelegramChatIdOk
+        400:
+          $ref: "#/components/responses/Bad"
+    post:
+      security: []
+      operationId: setTelegramChatId
+      tags:
+        - telegram
+      summary: Set telegram chat_id for bot
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - chat_id
+              properties:
+                chat_id:
+                  type: string
+        required: true
+      responses:
+        200:
+          $ref: "#/components/responses/Ok"
+        400:
+          $ref: "#/components/responses/Bad"
+  /api/telegram/ping:
+    post:
+      security: []
+      operationId: sendPingToTelegramBot
+      tags:
+        - telegram
+      summary: Send ping to telegram bot
+      responses:
+        200:
+          $ref: "#/components/responses/Ok"
+        400:
+          $ref: "#/components/responses/Bad"
+
 components:
   schemas:
     wifiMode:
@@ -273,3 +330,5 @@ tags:
     description: Manage TDS meter config
   - name: update
     description: Upload and flush firmware or data
+  - name: telegram
+    description: Manage telegram bot integration
