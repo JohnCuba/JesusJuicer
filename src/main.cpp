@@ -7,7 +7,7 @@
 #include "updater.module.hpp"
 #include "telegram.module.hpp"
 
-#define FIRMWARE_VERSION "0.0.4"
+#define FIRMWARE_VERSION "0.0.5"
 
 // Modules
 TDSModule *tds_module = TDSModule::GetInstance();
