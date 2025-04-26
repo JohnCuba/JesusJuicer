@@ -374,18 +374,18 @@ bool UniversalTelegramBot::setMyCommands(const String &commandArray)
 #if defined(_debug)
   Serial.println(F("sendSetMyCommands: SEND Post /setMyCommands"));
 #endif // defined(_debug)
-  unsigned long sttime = millis();
+       // unsigned long sttime = millis();
 
-  while (millis() - sttime < 8000ul)
-  { // loop for a while to send the message
-    response = sendPostToTelegram(BOT_CMD("setMyCommands"), payload.as<JsonObject>());
+  // while (millis() - sttime < 8000ul)
+  // { // loop for a while to send the message
+  response = sendPostToTelegram(BOT_CMD("setMyCommands"), payload.as<JsonObject>());
 #ifdef _debug
-    Serial.println("setMyCommands response" + response);
+  Serial.println("setMyCommands response" + response);
 #endif
-    sent = checkForOkResponse(response);
-    if (sent)
-      break;
-  }
+  sent = checkForOkResponse(response);
+  //   if (sent)
+  //     break;
+  // }
 
   closeClient();
   return sent;
@@ -614,26 +614,26 @@ bool UniversalTelegramBot::sendSimpleMessage(const String &chat_id, const String
 #ifdef TELEGRAM_DEBUG
   Serial.println(F("sendSimpleMessage: SEND Simple Message"));
 #endif
-  unsigned long sttime = millis();
+  // unsigned long sttime = millis();
 
   if (text != "")
   {
-    while (millis() - sttime < 8000ul)
-    { // loop for a while to send the message
-      String command = BOT_CMD("sendMessage?chat_id=");
-      command += chat_id;
-      command += F("&text=");
-      command += text;
-      command += F("&parse_mode=");
-      command += parse_mode;
-      String response = sendGetToTelegram(command);
+    // while (millis() - sttime < 8000ul)
+    // { // loop for a while to send the message
+    String command = BOT_CMD("sendMessage?chat_id=");
+    command += chat_id;
+    command += F("&text=");
+    command += text;
+    command += F("&parse_mode=");
+    command += parse_mode;
+    String response = sendGetToTelegram(command);
 #ifdef TELEGRAM_DEBUG
-      Serial.println(response);
+    Serial.println(response);
 #endif
-      sent = checkForOkResponse(response);
-      if (sent)
-        break;
-    }
+    sent = checkForOkResponse(response);
+    //   if (sent)
+    //     break;
+    // }
   }
   closeClient();
   return sent;
@@ -749,20 +749,20 @@ String UniversalTelegramBot::sendPostPhoto(JsonObject payload)
 #ifdef TELEGRAM_DEBUG
   Serial.println(F("sendPostPhoto: SEND Post Photo"));
 #endif
-  unsigned long sttime = millis();
+  // unsigned long sttime = millis();
 
   if (payload.containsKey("photo"))
   {
-    while (millis() - sttime < 8000ul)
-    { // loop for a while to send the message
-      response = sendPostToTelegram(BOT_CMD("sendPhoto"), payload);
+    // while (millis() - sttime < 8000ul)
+    // { // loop for a while to send the message
+    response = sendPostToTelegram(BOT_CMD("sendPhoto"), payload);
 #ifdef TELEGRAM_DEBUG
-      Serial.println(response);
+    Serial.println(response);
 #endif
-      sent = checkForOkResponse(response);
-      if (sent)
-        break;
-    }
+    sent = checkForOkResponse(response);
+    //   if (sent)
+    //     break;
+    // }
   }
 
   closeClient();
@@ -840,27 +840,27 @@ bool UniversalTelegramBot::sendChatAction(const String &chat_id, const String &t
 #ifdef TELEGRAM_DEBUG
   Serial.println(F("SEND Chat Action Message"));
 #endif
-  unsigned long sttime = millis();
+  // unsigned long sttime = millis();
 
   if (text != "")
   {
-    while (millis() - sttime < 8000ul)
-    { // loop for a while to send the message
-      String command = BOT_CMD("sendChatAction?chat_id=");
-      command += chat_id;
-      command += F("&action=");
-      command += text;
+    // while (millis() - sttime < 8000ul)
+    // { // loop for a while to send the message
+    String command = BOT_CMD("sendChatAction?chat_id=");
+    command += chat_id;
+    command += F("&action=");
+    command += text;
 
-      String response = sendGetToTelegram(command);
+    String response = sendGetToTelegram(command);
 
 #ifdef TELEGRAM_DEBUG
-      Serial.println(response);
+    Serial.println(response);
 #endif
-      sent = checkForOkResponse(response);
+    sent = checkForOkResponse(response);
 
-      if (sent)
-        break;
-    }
+    //   if (sent)
+    //     break;
+    // }
   }
 
   closeClient();
