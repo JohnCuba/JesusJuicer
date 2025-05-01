@@ -34,21 +34,17 @@ int getMedianNum(int bArray[], int iFilterLen)
 
 const char TDSModule::loggTag_[4] = "TDS";
 
-TDSModule *TDSModule::instance_{nullptr};
-
-TDSModule *TDSModule::GetInstance()
-{
-  if (instance_ == nullptr)
-  {
-    instance_ = new TDSModule();
-  }
-
-  return instance_;
-}
-
 float TDSModule::getValue()
 {
   static unsigned long analogSampleTimepoint = millis();
+  static unsigned int analogBuffer[sCount];
+  static int analogBufferTemp[sCount];
+  static unsigned int analogBufferIndex = 0;
+  static unsigned int copyIndex = 0;
+
+  static float averageVoltage = 0;
+  static float rawTdsValue = 0;
+  static float temperature = 25;
 
   if (millis() - analogSampleTimepoint > 40U)
   {
@@ -114,7 +110,7 @@ void TDSModule::onSetup()
 {
   Logg::debug(TDSModule::loggTag_, "start setup");
 
-  registerServerRoutes();
+  TDSModule::registerServerRoutes();
 
   pinMode(sensorPin, INPUT);
 

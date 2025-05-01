@@ -9,14 +9,11 @@
 
 #define FIRMWARE_VERSION "0.0.5"
 
-// Modules
-TDSModule *tds_module = TDSModule::GetInstance();
-
 void setup()
 {
   Serial.begin(115200);
 
-  tds_module->onSetup();
+  TDSModule::onSetup();
   FileSystemModule::onSetup();
   WifiModule::onSetup();
   UpdaterModule::onSetup(FIRMWARE_VERSION);
