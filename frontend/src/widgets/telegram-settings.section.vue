@@ -27,7 +27,7 @@ const handleSaveChatId = (event: Event) => {
       <input
         type="text"
         name="chat_id"
-        class="join-item input w-full"
+        class="input w-full"
         placeholder="Chat ID"
         :value="chatId"
         :class="{

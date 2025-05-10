@@ -12,7 +12,6 @@ const { upload: uploadFs, progress: fsUploadProgress } = useUploadFs()
     <InputFile
       accept=".bin"
       placeholder="Pick system"
-      class="join-item"
       @send="uploadFw"
       :progress="fwUploadProgress"
     />
