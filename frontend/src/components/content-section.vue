@@ -8,6 +8,8 @@ defineProps({
 <template>
   <section :id="id" class="flex flex-col gap-3">
     <h2 class="text-xl">{{ title }}</h2>
-    <slot />
+    <div class="relative flex flex-col gap-2">
+      <slot />
+    </div>
   </section>
 </template>

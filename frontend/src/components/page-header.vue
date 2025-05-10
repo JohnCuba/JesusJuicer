@@ -8,7 +8,7 @@ defineProps({
 </script>
 
 <template>
-  <header class="flex flex-col-reverse min-h-60 p-4 bg-neutral">
+  <header class="sticky top-[-8em] flex flex-col-reverse min-h-60 p-4 bg-transparent">
     <div v-if="$slots.default" class="flex-auto">
       <slot />
     </div>

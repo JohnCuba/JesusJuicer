@@ -5,7 +5,7 @@ useColorThemeWatcher()
 </script>
 
 <template>
-  <div class="bg-neutral">
+  <div class="root">
     <div class="min-h-svh max-w-lg mx-auto flex flex-col">
       <RouterView />
     </div>
@@ -33,5 +33,33 @@ useColorThemeWatcher()
   --font-sans:
     'Comfortaa', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
     'Segoe UI Symbol', 'Noto Color Emoji';
+}
+</style>
+
+<style lang="css" scoped>
+.root {
+  background: linear-gradient(
+    -45deg,
+    var(--color-primary),
+    var(--color-secondary),
+    var(--color-accent),
+    var(--color-neutral)
+  );
+  background-size: 200% 200%;
+  animation: gradient 10s ease infinite;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
 }
 </style>

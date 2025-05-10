@@ -6,7 +6,7 @@ defineProps({
 </script>
 
 <template>
-  <div class="relative card card-border overflow-hidden bg-base-100 shadow-sm">
+  <div class="relative card card-border overflow-hidden bg-base-100 shadow-xl">
     <div class="card-body">
       <h2 class="card-title font-sans">{{ label }}</h2>
       <slot />
