@@ -1,18 +1,19 @@
 #include <Arduino.h>
 
 #include "file_system.module.hpp"
-#include "wifi.module.hpp"
 #include "server.module.hpp"
+#include "storage.module.hpp"
 #include "tds.module.hpp"
-#include "updater.module.hpp"
 #include "telegram.module.hpp"
+#include "updater.module.hpp"
+#include "wifi.module.hpp"
 
 #define FIRMWARE_VERSION "0.0.5"
 
-void setup()
-{
+void setup() {
   Serial.begin(115200);
 
+  StorageModule::setup();
   TDSModule::onSetup();
   FileSystemModule::onSetup();
   WifiModule::onSetup();
@@ -26,4 +27,4 @@ void setup()
   digitalWrite(LED_BUILTIN, HIGH);
 }
 
-void loop() { }
+void loop() {}
