@@ -2,9 +2,13 @@
 
 #include "file_system.module.hpp"
 #include "logg.hpp"
-#include "wifi_credentials.hpp"
 
 #pragma once
+
+struct wifi_credentials {
+  std::string ssid;
+  std::string password;
+};
 
 static WiFiClientSecure wifiSecureClient;
 
@@ -14,9 +18,9 @@ class WifiModule {
   static void createAP();
   static bool connectToAP();
   static void registerServerRoutes();
-  static wifiCredentials getCredentials(const char *space,
-                                        const wifiCredentials &creds);
-  static void setCredentials(const char *space, const wifiCredentials &creds);
+  static wifi_credentials getCredentials(const char *space,
+                                         const wifi_credentials &creds);
+  static void setCredentials(const char *space, const wifi_credentials &creds);
   static void deleteCredentials(const char *space);
 
  public:

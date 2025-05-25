@@ -8,9 +8,8 @@
 #include "api_config.hpp"
 #include "server.module.hpp"
 #include "storage.module.hpp"
-#include "wifi_credentials.hpp"
 
-const wifiCredentials defaultSelfAP = wifiCredentials{
+const wifi_credentials defaultSelfAP = wifi_credentials{
   ssid : "juicer",
   password : "yoitsmeman",
 };
@@ -20,8 +19,8 @@ const char sta_store_key[9] = "wifi/sta";
 
 const char WifiModule::loggTag_[5] = "WIFI";
 
-wifiCredentials WifiModule::getCredentials(
-    const char *space, const wifiCredentials &defaultCreds = {"", ""}) {
+wifi_credentials WifiModule::getCredentials(
+    const char *space, const wifi_credentials &defaultCreds = {"", ""}) {
   std::string ssid =
       StorageModule::getString(space, "ssid", defaultCreds.ssid.c_str())
           .c_str();
@@ -33,7 +32,7 @@ wifiCredentials WifiModule::getCredentials(
 }
 
 void WifiModule::setCredentials(const char *space,
-                                const wifiCredentials &creds) {
+                                const wifi_credentials &creds) {
   StorageModule::setString(space, "ssid", creds.ssid.c_str());
   StorageModule::setString(space, "password", creds.password.c_str());
 }
@@ -68,7 +67,7 @@ void WifiModule::registerServerRoutes() {
         JsonDocument responseBody;
         JsonObject root = responseBody.to<JsonObject>();
 
-        wifiCredentials creds = getCredentials(ap_store_key, defaultSelfAP);
+        wifi_credentials creds = getCredentials(ap_store_key, defaultSelfAP);
 
         root["ssid"].set(creds.ssid);
         root["password"].set(creds.password);
@@ -92,7 +91,7 @@ void WifiModule::registerServerRoutes() {
 
         JsonDocument responseBody;
 
-        setCredentials(ap_store_key, wifiCredentials{ssid, password});
+        setCredentials(ap_store_key, wifi_credentials{ssid, password});
 
         request->send(200, RES_TYPE_TEXT, RES_BODY_OK);
       });
@@ -102,7 +101,7 @@ void WifiModule::registerServerRoutes() {
         JsonDocument responseBody;
         JsonObject root = responseBody.to<JsonObject>();
 
-        wifiCredentials creds = getCredentials(sta_store_key);
+        wifi_credentials creds = getCredentials(sta_store_key);
 
         root["ssid"].set(creds.ssid);
         root["password"].set(creds.password);
@@ -126,7 +125,7 @@ void WifiModule::registerServerRoutes() {
 
         JsonDocument responseBody;
 
-        setCredentials(sta_store_key, wifiCredentials{ssid, password});
+        setCredentials(sta_store_key, wifi_credentials{ssid, password});
 
         request->send(200, RES_TYPE_TEXT, RES_BODY_OK);
       });
@@ -159,7 +158,7 @@ void WifiModule::onSetup() {
 }
 
 bool WifiModule::connectToAP() {
-  wifiCredentials creds = getCredentials(sta_store_key);
+  wifi_credentials creds = getCredentials(sta_store_key);
 
   if (creds.ssid.empty()) {
     Logg::warn(WifiModule::loggTag_, "no saved networks finded");
@@ -200,7 +199,7 @@ void WifiModule::createAP() {
   WiFi.disconnect(false, true);
   Logg::info(WifiModule::loggTag_, "set mode: %d", WiFi.mode(WIFI_MODE_AP));
 
-  wifiCredentials creds = getCredentials(ap_store_key, defaultSelfAP);
+  wifi_credentials creds = getCredentials(ap_store_key, defaultSelfAP);
   Logg::info(WifiModule::loggTag_, "status: %d", WiFi.status());
 
   Logg::info(WifiModule::loggTag_, "init softAP: %d",
