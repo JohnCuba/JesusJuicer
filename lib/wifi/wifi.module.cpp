@@ -2,10 +2,9 @@
 
 #include <WiFi.h>
 
-#include <string>
-
 #include "ArduinoJson.h"
 #include "api_config.hpp"
+#include "logger.h"
 #include "server.module.hpp"
 #include "storage.module.hpp"
 
@@ -43,7 +42,7 @@ void WifiModule::deleteCredentials(const char *space) {
 }
 
 void WifiModule::registerServerRoutes() {
-  Logg::debug(WifiModule::loggTag_, "setup server routes");
+  ESP_LOGD(WifiModule::loggTag_, "setup server routes");
 
   ServerModule::registerRoute(
       "/api/wifi/state", HTTP_GET, [=](AsyncWebServerRequest *request) {
@@ -139,37 +138,36 @@ void WifiModule::registerServerRoutes() {
 }
 
 void WifiModule::onSetup() {
-  Logg::debug(WifiModule::loggTag_, "start setup");
+  ESP_LOGD(WifiModule::loggTag_, "start setup");
 
   WiFi.persistent(false);
 
   registerServerRoutes();
 
-  Logg::debug(WifiModule::loggTag_, "setup connection mode");
+  ESP_LOGD(WifiModule::loggTag_, "setup connection mode");
 
   bool connected = connectToAP();
 
   if (!connected) {
-    Logg::warn(WifiModule::loggTag_, "connection filed, switch to AP mode");
+    ESP_LOGW(WifiModule::loggTag_, "connection filed, switch to AP mode");
     createAP();
   }
 
-  Logg::debug(WifiModule::loggTag_, "end setup");
+  ESP_LOGD(WifiModule::loggTag_, "end setup");
 }
 
 bool WifiModule::connectToAP() {
   wifi_credentials creds = getCredentials(sta_store_key);
 
   if (creds.ssid.empty()) {
-    Logg::warn(WifiModule::loggTag_, "no saved networks finded");
+    ESP_LOGW(WifiModule::loggTag_, "no saved networks finded");
     return false;
   };
 
   WiFi.mode(WIFI_MODE_STA);
 
-  // TODO: gibberish in terminal on params from storage
-  Logg::info(WifiModule::loggTag_, "trying connecting to: %s",
-             creds.ssid.c_str());
+  ESP_LOGD(WifiModule::loggTag_, "trying connecting to: %s",
+           creds.ssid.c_str());
 
   WiFi.begin(creds.ssid.c_str(), creds.password.c_str());
 
@@ -182,13 +180,13 @@ bool WifiModule::connectToAP() {
     currentMillis = millis();
 
     if (currentMillis - previousMillis >= interval) {
-      Logg::error(WifiModule::loggTag_, "failed connecting to: %s", creds.ssid);
+      ESP_LOGE(WifiModule::loggTag_, "failed connecting to: %s", creds.ssid);
       break;
     }
   }
 
   if (WiFi.status() == WL_CONNECTED) {
-    Logg::info(WifiModule::loggTag_, "connected to %s", creds.ssid.c_str());
+    ESP_LOGI(WifiModule::loggTag_, "connected to %s", creds.ssid.c_str());
     return true;
   }
 
@@ -197,16 +195,15 @@ bool WifiModule::connectToAP() {
 
 void WifiModule::createAP() {
   WiFi.disconnect(false, true);
-  Logg::info(WifiModule::loggTag_, "set mode: %d", WiFi.mode(WIFI_MODE_AP));
+  ESP_LOGI(WifiModule::loggTag_, "set mode: %d", WiFi.mode(WIFI_MODE_AP));
 
   wifi_credentials creds = getCredentials(ap_store_key, defaultSelfAP);
-  Logg::info(WifiModule::loggTag_, "status: %d", WiFi.status());
+  ESP_LOGI(WifiModule::loggTag_, "status: %d", WiFi.status());
 
-  Logg::info(WifiModule::loggTag_, "init softAP: %d",
-             WiFi.softAP(creds.ssid.c_str(), creds.password.c_str()));
+  ESP_LOGI(WifiModule::loggTag_, "init softAP: %d",
+           WiFi.softAP(creds.ssid.c_str(), creds.password.c_str()));
 
-  Logg::info(WifiModule::loggTag_, "AP is created: %s",
-             WiFi.softAPSSID().c_str());
-  Logg::info(WifiModule::loggTag_, "IP address: %s",
-             WiFi.softAPIP().toString());
+  ESP_LOGI(WifiModule::loggTag_, "AP is created: %s",
+           WiFi.softAPSSID().c_str());
+  ESP_LOGI(WifiModule::loggTag_, "IP address: %s", WiFi.softAPIP().toString());
 };

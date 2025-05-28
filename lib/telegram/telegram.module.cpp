@@ -1,6 +1,7 @@
 #include "telegram.module.hpp"
 
 #include "api_config.hpp"
+#include "logger.h"
 #include "server.module.hpp"
 #include "storage.module.hpp"
 #include "wifi.module.hpp"
@@ -24,7 +25,7 @@ void TelegramModule::setChatId(std::string value) {
 }
 
 void TelegramModule::registerServerRoutes() {
-  Logg::debug(TelegramModule::loggTag_, "setup server routes");
+  ESP_LOGD(TelegramModule::loggTag_, "setup server routes");
 
   ServerModule::registerRoute(
       "/api/telegram/chat_id", HTTP_GET, [=](AsyncWebServerRequest *request) {
@@ -52,13 +53,13 @@ void TelegramModule::registerServerRoutes() {
 }
 
 void TelegramModule::onSetup() {
-  Logg::debug(TelegramModule::loggTag_, "start setup");
+  ESP_LOGD(TelegramModule::loggTag_, "start setup");
 
   wifiSecureClient.setCACert(TELEGRAM_CERTIFICATE_ROOT);
 
   TelegramModule::registerServerRoutes();
 
-  Logg::debug(TelegramModule::loggTag_, "end setup");
+  ESP_LOGD(TelegramModule::loggTag_, "end setup");
 }
 
 void TelegramModule::sendMessage(std::string message) {

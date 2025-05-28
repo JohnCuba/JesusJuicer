@@ -1,6 +1,7 @@
 #include <Arduino.h>
 
 #include "file_system.module.hpp"
+#include "logger.h"
 #include "server.module.hpp"
 #include "storage.module.hpp"
 #include "tds.module.hpp"
@@ -11,7 +12,9 @@
 #define FIRMWARE_VERSION "0.0.5"
 
 void setup() {
+  esp_log_level_set("*", ESP_LOG_DEBUG);
   Serial.begin(115200);
+  Serial.setDebugOutput(true);
 
   StorageModule::setup();
   TDSModule::onSetup();
